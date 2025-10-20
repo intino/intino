@@ -1,0 +1,179 @@
+rule type(language)
+	package $groupId+camelCase+lowercase;
+
+	import io.intino.tara.model.MogramRoot;
+	import io.intino.tara.model.Annotation;
+	import io.intino.tara.model.NamedReference;
+	import io.intino.tara.model.Level;
+	import io.intino.tara.model.Primitive;
+	import io.intino.tara.model.rules.Size;
+	import io.intino.tara.model.rules.property.*;
+	import io.intino.tara.model.rules.composition.ConstraintRule;
+
+	import java.io.IOException;
+	import java.io.InputStream;
+	import java.io.ObjectInputStream;
+
+	import java.util.List;
+	import java.util.Locale;
+
+	import static io.intino.tara.language.semantics.constraints.RuleFactory.*;
+
+	public class $name+camelCase+reference+FirstUpperCase extends io.intino.tara.Tara {
+		private static io.intino.tara.processors.model.Model model = null;
+
+		public $name+toCamelCase+reference+FirstUpperCase() {
+			model();
+			$model+def...[$NL]
+			$split+call...[$NL]
+		}
+
+		$split+class...[$NL]
+
+		@Override
+		public String languageName() {
+			return "$name+lowerCase";
+		}
+
+		@Override
+	    public Locale locale() {
+	        return $locale;
+	    }
+
+	    @Override
+		public MogramRoot model() {
+			try {
+				if (model != null) return model;
+				return model = (io.intino.tara.processors.model.Model) new ObjectInputStream(this.getClass().getResourceAsStream("/$groupIdPath/$name~-$version.obj")).readObject();
+			} catch (IOException | ClassNotFoundException e) {
+				System.err.println(e.getMessage());
+				return null;
+			}
+		}
+
+		@Override
+		public String metaLanguage() {
+			return $metaLanguage+quoted;
+		}
+	}
+
+rule type(model) and trigger(def)
+	def("$name").with(context(null<<, $mogramType>>)<<$constraints>><<.$assumptions>>);
+
+rule trigger(call)
+	Split$number.load(this);
+
+rule trigger(class)
+	private static class Split$number {
+		private static void load($language+reference+firstUpperCase self) {
+			$mogram...[$NL]
+		}
+	}
+
+rule type(mogram) and trigger(mogram)
+	self.def("$name").with(self.context(Level.$level, <<$mogramType>>)<<$constraints>><<.$assumptions>>);
+
+rule type(mogramType) and trigger(mogramType)
+	$type+quoted...[, ]
+
+rule type(facetInstantiation) and trigger(constraint)
+	facetInstantiation($type+quoted...[, ])
+
+rule trigger(constraints)
+	<<.has($constraint...[, ])>>
+
+rule type(constraint) and type(component) and trigger(constraint)
+	component($type+quoted, List.of($rule...[, ])<<, $tags...[, ]>>)
+
+rule type(constraint) and type(property) and trigger(constraint)
+	property("$name", $type+primitive, <<"$facet"?"">>, $position, Level.$level, List.of($rule...[, ])<<, $tags...[, ]>>)
+
+rule type(constraint) and type(facet) and trigger(constraint)
+	facet("$value"<<, $terminal?, false>><<, $required?, false>>, new String[]{$with+quoted...[, ]}, new String[]{$without+quoted...[, ]})<<.has($constraint...[, ])>>
+
+rule type(constraint) and type(oneOf) and trigger(constraint)
+	oneOf(List.of($rule...[, ]), <<$constraint...[, ]>>)
+
+rule type(constraint) and type(redefine) and trigger(constraint)
+	redefine($name+quoted, $supertype+quoted)
+
+rule trigger(constraint)
+	$this()
+
+rule trigger(tags)
+	Annotation.$this
+
+rule type(customRule, metric) and trigger(rule)
+	$qn.$default
+
+rule type(nativecustomwordrule) and trigger(rule)
+	new io.intino.tara.model.rules.property.WordRule(List.of($words+quoted...[, ])<<, $externalWordClass+quoted>>)
+
+rule type(customrule) and trigger(rule)
+	new ConstraintRule(new NamedReference(model.constraint("$qn"), "$qn"))
+
+rule type(rule, customRule) and trigger(size)
+	new ConstraintRule(new NamedReference<>(model.constraint("$qn"), "$qn"))
+
+rule type(rule, size) and trigger(rule)
+	new Size($min, $max)
+
+rule type(nativeObjectRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.NativeObjectRule("$type")
+
+rule type(nativeReferenceRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.NativeReferenceRule(List.of($allowedReferences+quoted...[, ]))
+
+rule type(nativerule) and trigger(rule)
+	new io.intino.tara.model.rules.property.FunctionRule("$interfaceClass", "$signature", List.of($imports+quoted...[, ]))
+
+rule type(wordrule) and trigger(rule)
+	new io.intino.tara.model.rules.property.WordRule(List.of($words+quoted...[, ])<<, $externalWordClass+quoted>>)
+
+rule type(referenceRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.ReferenceRule(List.of($allowedTypes+quoted...[, ]))
+
+rule type(doubleRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.DoubleRule($min+cast, $max+cast, "$metric")
+
+rule type(integerRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.IntegerRule($min, $max, "$metric")
+
+rule type(dateRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.DateRule(<<$parameters+quoted,>>)
+
+rule type(instantRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.InstantRule(<<$parameters+quoted,>>)
+
+rule type(resourceRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.ResourceRule(List.of($extensions+quoted...[, ]))
+
+rule type(stringRule) and trigger(rule)
+	new io.intino.tara.model.rules.property.StringRule($regex+quoted)
+
+rule attribute(this, Infinity) and trigger(cast)
+	Double.POSITIVE_INFINITY
+
+rule attribute(this, -Infinity) and trigger(cast)
+	Double.NEGATIVE_INFINITY
+
+rule not attribute(this, -Infinity) and not attribute(this, Infinity) and trigger(cast)
+	$this
+
+rule type(assumptions) and trigger(assumptions)
+	assume($assumption...[, ])
+
+rule trigger(assumption)
+	is$this+camelCase+firstUpperCase()
+
+rule trigger(quoted)
+	"$this"
+
+rule trigger(primitive)
+	Primitive.$this+UpperCase
+
+rule trigger(locale) and attribute(this, es)
+	new Locale("es", "Spain", "es_ES")
+
+rule trigger(locale) and attribute(this, en)
+	Locale.ENGLISH

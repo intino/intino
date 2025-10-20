@@ -1,0 +1,28 @@
+rule type(native) and type(resouce)
+	try {
+		return new java.net.URL($value+url+quoted);
+	} catch (java.net.MalformedURLException e) {
+		return null;
+	};
+	
+
+rule type(native) and type(date)
+	DateLoader.load(java.util.Collections.singletonList("$value"), self).get(0)
+
+rule type(native) and type(instant)
+	InstantLoader.load(java.util.Collections.singletonList("$value"), self).get(0)
+
+rule type(native) and type(emptyNode) and type(reference)
+	null
+
+rule type(native) and type(reference)
+	self.graph().core$$().loadInstance("$value");
+
+rule type(native) and type(resource)
+	self.graph().core$$().loadResource("$value+url");
+
+rule type(native) and type(string)
+	"$value"
+
+rule type(native) and not type(string)
+	$value

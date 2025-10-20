@@ -1,0 +1,79 @@
+dsl Konos
+
+Service builder-service as REST(host = "", port = "{port}")
+	Resource(path = "/builders") builders
+		Get
+			Response as Object(schema = BuilderInfo) List
+		Post
+			Parameter(in = body) info as Object(schema = RegisterBuilder)
+			Response(code ="201")
+
+	Resource(path = "/builders/info") builderInfo
+		Get
+			Parameter(in = query) imageURL as Text
+			Parameter(in = body) registryToken as Text
+			Response as Object(schema = BuilderInfo)
+			Exception(code = Conflict)
+	Resource("/operations/run") runOperation
+		Post
+			Parameter(in = form) runOperationContext as Object(schema = RunOperationContext)
+			Parameter(in = form) filesInTar as File
+			Response ticket as Text
+	Resource(path = "operation/:ticket/output") operationOutput
+		Get
+			Parameter(in = path) ticket as Text
+			Response operationResult as Object(OperationResult)
+	Resource(path = "operation/:ticket/outputs/:output") outputResource
+		Get
+			Parameter(in = path) ticket as Text
+			Parameter(in = path) output as Word("Src" "Gen" "Res" "Out" "Build")
+			Parameter(in = query) excludeFilePattern as Text
+			Response file as File
+			Exception(code = NotFound)
+	Notification(path = "operation/:ticket/messages") subscribeOperation
+		Parameter(in = path) ticket as Text
+
+Schema OperationResult
+	Attribute state as Word(values = "Running" "Finished")
+	Attribute genRef as Text
+	Attribute srcRef as Text
+	Attribute resRef as Text
+	Attribute outRef as Text
+	Attribute buildRef as Text
+	Attribute success as Bool
+	Attribute messages as Object(Message) List
+
+
+Schema RegisterBuilder
+	Attribute imageURL as Text
+	Attribute registryToken as Text
+
+Schema BuilderInfo
+	Attribute imageURL as Text
+	Attribute operations as Text List
+	Attribute targetLanguages as Text List
+	Attribute creationDate as Text
+	Attribute properties as Map
+		Key as Text
+		Value as Text
+
+
+Schema RunOperationContext
+	Attribute imageURL as Text
+	Attribute operation as Text
+	Attribute projectGroup as Text
+	Attribute projectName as Text
+	Attribute projectVersion as Text
+	Attribute languageGroup as Text
+	Attribute languageName as Text
+	Attribute languageVersion as Text
+	Attribute languagePath as Text
+	Attribute generationPackage as Text
+
+Schema Message
+	Attribute type as Text
+	Attribute kind as Word(values = "INFO" "WARNING" "ERROR")
+	Attribute content as Text
+	Attribute uri as Text
+	Attribute line as Integer
+	Attribute column as Integer
