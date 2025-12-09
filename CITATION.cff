@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Roncal Andrés
+    given-names: Octavio
+    orcid: https://orcid.org/0000-0003-3503-3833
+title: "Intino. Facing DSML Adoption Challenge through Language Inheritance and Contract-Based Specialization"
+version: 2.0.0
+date-released: 09/12/2025
