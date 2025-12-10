@@ -1,0 +1,19 @@
+dsl Legio
+
+Artifact("io.quassar", "1.0.0") extended-builder
+	Imports
+		Compile("io.quassar", "builder-sdk", "1.0.0")
+		Compile("io.intino.magritte", "builder", "8.0.1")
+		Compile("io.intino.itrules", "engine", "2.0.3")
+		Test("junit", "junit", "4.13.2")
+	Package(mode = ModulesAndLibrariesLinkedByManifest) as Runnable(mainClass = "io.quassar.builder.QuassarcRunner")
+		finalName = "builder"
+		createMavenPom = true
+	Distribution
+		Artifactory("intino-maven")
+			Release("https://artifactory.intino.io/artifactory/release-libraries")
+			Snapshot("https://artifactory.intino.io/artifactory/snapshot-libraries")
+RunConfiguration local
+
+Repository ("quassar-maven")
+	Release("https://quassar.io/artifacts/releases")

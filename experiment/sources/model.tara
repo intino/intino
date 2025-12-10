@@ -1,0 +1,51 @@
+dsl smartcontracts
+
+Party("Alice", Buyer, "12345678A") alice
+Party("Bob", Seller, "87654321B") bob
+
+Contract(id = "C1", startDate = "2026-09-01", endDate = "2025-10-01", parties = alice bob)
+	Clause("Entrega del producto")
+		description = "Bob debe entregar el producto antes del 10 de septiembre de 2025"
+		Obligation(description = "Entregar el producto", actor = bob, action = Deliver, deadline = "2025-09-10")
+		Penalty(amount = 100.0, description = "Penalización por no entregar a tiempo")
+	
+	Clause("Pago del producto")
+		description = "Alice debe pagar a Bob antes del 15 de septiembre de 2025"
+		Obligation("Pago a Bob", actor = alice, action = Pay, deadline = "2025-09-15")
+
+
+Party("CloudCorp.com", Provider, "C-001")CloudCorp
+Party("Edu.org", Client, "E-101") EduOrg
+
+Contract("C2", startDate = "2025-01-01", endDate = "2025-12-31" , parties = CloudCorp EduOrg)
+	Clause("Activación del servicio") is Conditional
+		description = "El contrato se activa si se recibe una solicitud de servicio"
+		Condition(type = Event, expression = "ServiceRequestReceived")
+		Obligation("Notificar activación del servicio", actor = CloudCorp, action = Notify)
+			//TODO Deadline in 5 days
+		Penalty(amount = 250.0, description = "Penalización por no notificar a tiempo")
+
+	Clause("Renovación automática")
+		description = "EduOrg debe renovar el contrato salvo aviso contrario antes del 1 de diciembre de 2025"
+		Obligation(description = "Renovar contrato", actor = EduOrg, action = Renew, deadline="2025-12-01")
+
+
+Party("Laura Morales", Lessor, "L-345") laura
+Party("Marco Zamora", Lessee, "M-567") marco
+
+Contract(id= "C3", startDate = "2025-04-01", endDate =  "2026-03-31", laura marco)
+	Clause("Obligaciones mensuales")
+		//TODO must be checked monthly
+		description= "Pago de alquiler y notificación de incidencias cada mes"
+		Clause("Pago mensual")
+			description = "Marco debe pagar el alquiler antes del 5 de cada mes"
+			Obligation("Pagar alquiler mensual", actor = marco, action= Pay)
+				//TODO Deadline in 5 days
+		Clause("Notificación de incidencias")
+			description= "Laura debe notificar incidencias antes del 10 de cada mes"
+			Obligation("Notificar incidencias", actor= laura, action= Notify)
+				//TODO Deadline in 10 days
+
+	Clause(title= "Informe final de estado")
+		description = "Laura debe entregar informe final a Marco antes del 15 de marzo de 2026"
+		Obligation("Entregar informe final", actor = laura, action = Deliver, deadline = "2026-03-15")
