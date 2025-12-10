@@ -123,7 +123,7 @@ At a high level, Intino is structured as:
   - Parameterized by a DSML configuration and contracts.
   - Provides diagnostics, completion, navigation, etc.
 
-- **Front-End**
+- **Editor**
   - Web-based UI built on top of the Language Server.
   - Allows end users to create, edit, and validate models.
 
@@ -137,18 +137,20 @@ At a high level, Intino is structured as:
 intino/
 ├─ language/			  # Mother language core and checker
 │
-├─ metta/              # Metta DSML implementation
+├─ metta/                 # Metta DSML implementation│
 │
-├─ builder/
+├─ builder/				  # Builder that generates the DSML
+│
+├─ extended-builder/	  # Extension of the builder that also generates an accessor library to the graph and the language-server
 │
 ├─ language-server/	 	  # Parameterized LSP implementation
 │
-├─ frontend/
+├─ editor/				  # Web-based UI built on top of the Language Server.
 │
 ├─ replication-package/
    ├─ data/               # Anonymized CSVs for the user study
    ├─ scripts/            # Analysis scripts (R/Python/…)
-   └─ materials/          # Task descriptions, questionnaires, etc.
+   └─ sources/            # Task descriptions, questionnaires, etc.
 ```
 
 ---
