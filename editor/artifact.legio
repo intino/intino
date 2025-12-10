@@ -28,7 +28,7 @@ Artifact(groupId = "io.quassar", version = "1.2.32") editor
 		Compile("io.intino.alexandria", "primitives", "1.1.4")
 		Compile("io.intino.alexandria", "jmx", "1.0.7")
 
-	Package(mode = ModulesAndLibrariesLinkedByManifest, finalName="editor") as Runnable(mainClass = "io.quassar.editor.box.Main")
+	Package(mode = ModulesAndLibrariesLinkedByManifest, finalName="editor", createMavenPom =true) as Runnable(mainClass = "io.quassar.editor.box.Main")
 
     Distribution
         Artifactory("intino-maven")
