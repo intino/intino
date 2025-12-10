@@ -174,7 +174,7 @@
 			<groupId>tara.dsl</groupId>
 			<artifactId>metta</artifactId>
 			<scope>compile</scope>
-			<version>2.0.0</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -195,7 +195,7 @@
 			<version>6.8.0.202311291450-r</version>
 			<exclusions>
 				<exclusion>
-					<groupId>com.github.mwiede</groupId>
+					<groupId>com.jcraft</groupId>
 					<artifactId>jsch</artifactId>
 				</exclusion>
 			</exclusions>
