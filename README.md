@@ -248,3 +248,19 @@ If you use Intino in academic work, please cite:
 ## Acknowledgements
 
 We thank all participants of the user study and collaborators who provided feedback on the Intino method and toolchain.
+
+
+> **Note on repository history**
+>
+> The code in this repository has been consolidated from several previously
+> independent repositories. This reorganization was carried out to:
+> (i) provide a single, coherent codebase that matches the architecture
+> described in the accompanying paper,
+> (ii) simplify maintenance and evolution of the Intino toolchain, and
+> (iii) offer a self-contained replication package for researchers and
+> practitioners.
+> 
+> As a result, the Git history does not fully reflect the original
+> development timeline of each component, but all functionality and examples
+> required to build, run, and reproduce the reported results are included
+> here.

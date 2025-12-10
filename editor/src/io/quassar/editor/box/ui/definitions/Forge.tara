@@ -1,0 +1,40 @@
+dsl Konos
+
+use UI
+use Languages
+use Editors
+use Theme
+
+Template forgeTemplate as Relative(height=100%, width=100%)
+
+	Block(layout=Vertical Flexible CenterCenter, visible=false) notFoundBlock
+		Block(layout=Vertical Flexible, spacing=DP16, format=messageBlock) as Relative(height=100%, width=60%)
+			Block(layout=Vertical)
+				Text(value="Not found", format=h2 airTop textCentered greyHardColor, translate=true)
+				Text(value="Sorry, we can't find the forge you are looking for", format=h5 textCentered greyColor, translate=true)
+				Block(layout=Horizontal) > Button(title="home", format=airTop, highlight=Outline) as Action Addressable(EditorElements.home)
+
+	Block(layout=Vertical Flexible) contentBlock as Relative(height=100%, width=100%)
+
+		Block(layout=Vertical Flexible CenterCenter) createLanguageBlock as Conditional
+			TemplateStamp(template=createLanguageEditor) createLanguageStamp
+
+		Block(layout=Vertical Flexible) languageBlock as Conditional
+			TemplateStamp(template=languageForgeTemplate) languageStamp
+
+Template(layout=Horizontal Center, format=forgeHeaderStyle) forgeHeaderTemplate
+
+	Block(layout=Horizontal Center Flexible, format=middleAirTop middleAirBottom middleAirLeft) languageView
+		Link(title="", format=logoLink, visible=false) homeLink as Action OpenSite(site=empty)
+		Image(value=empty, format=airLeft, mobileReduceFactor=75%, colorInvertedWithDarkMode=true) logo as Absolute(height=35px)
+		Text(value="", format=h2 bold airLeft) forgeTitle
+
+	Block(layout=Horizontal EndJustified)
+		MaterialIconButton(title="Set dark mode", format=airRight, icon="Brightness4", size=Small) as SetDarkMode
+		MaterialIconButton(title="Set light mode", format=airRight, icon="Brightness7", size=Small) as SetLightMode
+		Button(title="About", format=airRight) aboutLink as Action OpenSite(site=empty)
+		Button(title="Log in", format=airRight, visible=false) login as Action
+
+		User(mode=OnlyPhoto, visible=false, format=relative veryLargeIconSize airRight smallAirTop) user
+			Selector as ListBox
+				Block as Option > Link(title="Projects", visible=false) projectsLink as Action OpenSite(site=empty)

@@ -1,0 +1,359 @@
+dsl Konos
+
+use Languages
+use Editors
+use UI
+use Theme
+
+Template(layout=Horizontal Center, format=subHeaderStyle) modelHeaderTemplate
+
+	Block(layout=Horizontal Center Flexible, visible=false) contentBlock
+		Block(layout=Horizontal Flexible Center)
+			MaterialIconButton(title="Goto DSL", icon="ArrowUpward", size=Small, format=airRight middleAirLeft) languageTrigger as Action Addressable(EditorElements.language)
+			Link(title="", size=Small, format=airRight middleAirLeft modelExampleLink) closeTrigger as CloseApp
+			TemplateStamp(template=modelNameViewer) nameViewer
+
+			Block(layout=Horizontal Center, format=doubleAirLeft)
+				Button(title="settings", size=Small, format=airRight, highlight=None, visible=false) settingsTrigger as Action
+
+			Block(layout=Horizontal Center, format=doubleAirLeft)
+				Button(title="1. edit", size=Small, format=airRight, highlight=Fill) editTrigger as Action
+				Button(title="2. check", size=Small, format=airRight, highlight=Outline) checkTrigger as Action > Shortcut(key="Crtl+F9", metaKeys=Control)
+				Button(title="3. commit", size=Small, format=airRight, highlight=Outline, visible=false) commitTrigger as Action Readonly > Shortcut(key="Shift+Crtl+F9", metaKeys=Shift Control)
+				SplitButton(title="draft", format=airRight minSelectorWidth, options="draft", defaultOption = "draft", visible=false) releaseSelector as Action
+				Button(title="4. Forge DSL", size=Small, format=airRight, highlight=Outline, visible=false) forgeTrigger as OpenSite(site=empty) Readonly
+				Button(title="4. Execute", size=Small, format=airRight, highlight=Outline, visible=false) executionTrigger as Action Readonly
+				Button(title="4. Inspect", size=Small, format=airRight, visible=false) downloadTrigger as Action
+				Button(title="clone", format=airRight, visible=false) cloneTrigger as Action
+				Block(visible=false, format=airLeft, hidden=IfMobile) noLanguageDefinedBlock > Text(value="A DSL has not been created for this metamodel yet", translate=true)
+				Block(layout=Horizontal Wrap, visible=false, format=airLeft) languageDefinedBlock
+					Block(hidden=IfMobile) > Text(value="This metamodel has been used to create", translate=true, format=middleAirRight)
+					Link(title="", format=nowrap doubleAirRight) gotoForgeTrigger as OpenSite(site=empty)
+
+		Block(layout=Horizontal Center EndJustified)
+			TemplateStamp(template=modelLanguageToolbar) languageToolbar
+
+	TemplateStamp(template=commitModelDialog) commitModelDialog
+	TemplateStamp(template=languageExecutionLauncher) executionLauncher
+	TemplateStamp(template=modelNameDialog) modelNameDialog
+	TemplateStamp(template=downloadModelDialog) downloadModelDialog
+
+Template(layout=Horizontal Center) modelLanguageToolbar
+	Text(value="", format=doubleAirRight bold) aboutText
+	Link(title="", format=doubleAirRight, visible=false) aboutLink as Action Addressable(EditorElements.model)
+	Text(value="help", format=doubleAirRight bold, visible=false) helpText
+	Link(title="help", format=doubleAirRight, visible=false) helpLink as Action Addressable(EditorElements.model)
+	Text(value="examples", format=doubleAirRight bold, visible=false) examplesText
+	Link(title="examples", format=doubleAirRight, visible=false) examplesLink as Action Addressable(EditorElements.model)
+	Image(format=middleAirRight, mobileReduceFactor=75%, colorInvertedWithDarkMode=true) languageLogo as Absolute(height=25px)
+
+Template modelsTemplate as Relative(height=100%, width=100%)
+	Link(title="") modelTrigger as OpenSite(site=empty, target=Blank)
+
+	Block(layout=Vertical Flexible) body
+		List(itemClass="io.quassar.editor.model.Model") modelList
+			noItemsMessage = ""
+			Mold
+				Item(height = 50px) modelItem
+					Block(layout=Vertical Flexible, format=doubleBottomSpaced topSpaced bottomBordered)
+						Link(title="", format=relative bringToFront h5 upperCase, visible=false) label as Action Addressable(EditorElements.model)
+						Link(title="", format=relative bringToFront h5 upperCase, visible=false) siteLabel as Action OpenSite(site=empty, target=Blank)
+						Link(title="", format=relative bringToFront h5 upperCase, visible=false) embeddedLabel as Action
+						Text description
+						Block(layout=Horizontal Wrap)
+							Text(format=airRight) language as Labeled("DSL")
+							Date(format=airRight) createDate as Labeled("Created")
+							Date(format=airRight) updateDate as Labeled("Updated")
+							Text(visible=false) owner as Labeled("Created by")
+
+	Block(layout=Vertical Flexible, visible=false) embeddedModelBlock
+
+		Block(layout=Horizontal Center)
+			Block(layout=Horizontal Flexible, format=autoHeight)
+				MaterialIconButton(title="Examples", icon="ArrowUpward", size=Small, format=exampleAirLeft middleAirRight) backExamples as Action
+				Text(format=h5) modelTitle
+			Block(layout=Horizontal EndJustified, format=airRight)
+
+		Block(layout=Vertical Flexible)
+			Block(layout=Vertical Flexible, format=greyLightBackground middleSpaced)
+				TemplateStamp(template=modelViewer) embeddedModelPreview
+
+Template modelTemplate as Relative(height=100%, width=100%)
+	TemplateStamp(template=licenseExpiredBanner) licenseExpiredBanner
+
+	Block(layout=Horizontal, visible=false, format=banner) languageChangedBlock
+		Text(value="The DSL associated with this model has changed. Please reload this model to check if it remains compatible.", format=airRight)
+		Button(title="Reload") reload as Action
+
+	Block(layout=Vertical Flexible CenterCenter, visible=false) notFoundBlock
+		Block(layout=Vertical Flexible, spacing=DP16, format=messageBlock) as Relative(height=100%, width=60%)
+			Block(layout=Vertical)
+				Text(value="Not found", format=h2 airTop textCentered greyHardColor, translate=true)
+				Text(value="Sorry, we can't find the model you are visiting", format=h5 textCentered greyColor, translate=true)
+				Block(layout=Horizontal) > Button(title="home", format=airTop, highlight=Outline) as Action Addressable(EditorElements.home)
+
+	Block(layout=Vertical Flexible) contentBlock as Relative(height=100%, width=100%)
+		TemplateStamp(template=modelEditor) modelEditor
+
+Template modelEditor as Relative(height=100%, width=100%)
+	TemplateStamp(template=modelHeaderTemplate) headerStamp
+
+	Block(layout=Vertical Flexible CenterCenter, visible=false) languageNotLoadedBlock
+		Block(layout=Vertical Flexible, spacing=DP16, format=messageBlock) as Relative(height=100%, width=100%)
+			Block(layout=Vertical)
+				Text(value="Internal error", format=h2 airTop textCentered, translate=true)v
+				Text(value="Could not load model. Click the info button to use a different DSL version", format=textCentered greyColor, translate=true)
+				Block(layout=Horizontal) > Button(title="info", format=airTop, highlight=Outline) infoTrigger as Action
+
+	Block(layout=Horizontal Flexible, visible=false) contentBlock
+
+		Block(layout=Vertical, visible=false, format=relative) collapsedLeftPanel as Absolute(width=70px)
+			Block(format=leftPanelBorder)
+			Block(layout=Horizontal, format=headerPanel greyLightBackground leftPanelSpaced)
+				Block(layout=Horizontal Center Flexible)
+					MaterialIconButton(title="open edition", icon="ChevronRight", visible=false, size=Small) expandLeftPanel as Action
+			Selector collapsedTabSelector as ListBox
+				Block(layout=Horizontal Center) collapsedModel as Option > MaterialIcon(icon="DescriptionOutlined", title="Model", format=airRight monitoringSmallAirLeft)
+				Block(layout=Horizontal Center) collapsedResources as Option > MaterialIcon(icon="AccountTreeOutlined", title="Resources", format=airRight monitoringSmallAirLeft)
+
+		Block(layout=Horizontal Flexible) modelEditionBlock as Resizable(minSize=0%)
+			Block(layout=Horizontal Flexible) as Relative(width=14%)
+				Block(layout=Vertical) mainView as Absolute(width=70px)
+					Block(layout=Horizontal, format=headerPanel greyLightBackground leftPanelSpaced)
+						Block(layout=Horizontal Center Flexible)
+							MaterialIconButton(title="close edition", icon="ChevronLeft", visible=false, size=Small) collapseLeftPanel as Action
+					Selector tabSelector as ListBox Addressable(EditorElements.model)
+						Block(layout=Horizontal Center) model as Option > MaterialIcon(icon="DescriptionOutlined", title="Model", format=airRight monitoringSmallAirLeft)
+						Block(layout=Horizontal Center) resources as Option > MaterialIcon(icon="AccountTreeOutlined", title="Resources", format=airRight monitoringSmallAirLeft)
+				Block(layout=Vertical Flexible, format=whiteBackground) browserBlock as Relative(width=100%, height=100%)
+					Block(layout=Vertical Flexible) modelBrowserBlock as Conditional(mainView.tabSelector.model) Relative(height=100%, width=100%) > TemplateStamp(template=modelBrowserTemplate) modelBrowserStamp
+					Block(layout=Vertical Flexible) resourcesBrowserBlock as Conditional(mainView.tabSelector.resources) Relative(height=100%, width=100%) > TemplateStamp(template=resourcesBrowserTemplate) resourcesBrowserStamp
+
+			Block(layout=Vertical Flexible) as Relative(width=50%)
+				Block(layout=Horizontal, format=leftBordered headerPanel greyLightBackground leftSpaced rightSpaced)
+					Block(layout=Horizontal Flexible)
+						Text(value="", format=h6, translate=true) filename
+						Block(layout=Horizontal, visible=false, format=airLeft) fileModifiedMessage > Text(value="modified", translate=true, format=airRight redColor bold)
+						Block(layout=Horizontal, visible=false, format=airLeft) fileSavedMessage > Text(value="saved", translate=true, format=airRight greenColor bold)
+					Block(layout=Horizontal EndJustified)
+						Button(title="shortcuts") as OpenDialog(dialog=editorHelpDialog)
+				Block(layout=Vertical Flexible) as Resizable Relative(height=100%)
+					Block(layout=Vertical Flexible) as Relative(height=60%)
+						Block(layout=Vertical Flexible CenterCenter, format=whiteBackground) fileNotSelectedBlock
+							Text(value="Select file on left panel to open it")
+						Block(layout=Vertical Flexible, format=whiteBackground) nonEditableFileBlock
+							File fileField
+						Block(layout=Vertical Flexible, visible=false) editableFileBlock
+							DisplayStamp(display=intinoDslEditor, format=fullHeight) intinoDslEditor
+					Block(visible=false) consoleBlock as Relative(height=40%) > TemplateStamp(template=consoleTemplate) console
+
+			Block(layout=Vertical Flexible) as Relative(width=36%)
+				TemplateStamp(template=languageExplorer) languageExplorer
+
+		Block(layout=Vertical, visible=false, format=relative) collapsedRightPanel as Absolute(width=70px)
+			Block(format=rightPanelBorder)
+			Block(layout=Horizontal Center, format=headerPanel greyLightBackground)
+				Block(layout=Horizontal Center EndJustified Flexible, format=doubleAirRight)
+					MaterialIconButton(title="open panel", icon="ChevronLeft", size=Small) expandRightPanel as Action
+			Block(layout=Vertical Flexible, format=relative) as Relative(height=100%)
+				Block(layout=Vertical Flexible) as AutoSize > Link(title=" ", format=collapsedBlockLink) expandRightPanelFull as Action
+
+	Dialog(title="File modified") fileModifiedDialog as Absolute(width=500px, height=180px)
+        Block as Relative(height=100%, offsetHeight=40px)
+        	Text(value="File have been modified. What do you want to do?", translate=true)
+		Divider
+		Block(layout=Horizontal)
+			Block(layout=Horizontal Flexible StartJustified)
+				Button(title="Cancel", size=Small, format=airRight) cancelSavingFile as Action
+			Block(layout=Horizontal EndJustified)
+				Button(title="Don't save", size=Small, format=airRight) continueWithoutSavingFile as Action
+				Button(title="Save", size=Small, highlight=Fill) continueSavingFile as Action
+
+	Dialog(title="DSL help") helpDialog as Relative(width=60%, height=80%)
+        Block(format=overflowAuto) as Relative(height=100%, offsetHeight=40px)
+        	HtmlViewer(format=fullHeight) helpStamp
+		Divider
+		Block(layout=Horizontal EndJustified)
+			Button(title="Close", size=Small, highlight=Fill) as CloseDialog(helpDialog)
+
+	Dialog(title="Shortcuts") editorHelpDialog as Relative(width=60%, height=80%)
+        Block(format=overflowAuto) as Relative(height=100%, offsetHeight=40px)
+        	DisplayStamp(display=editorHelpDisplay, format=fullHeight) editorHelpStamp
+		Divider
+		Block(layout=Horizontal EndJustified)
+			Button(title="Close", size=Small, highlight=Fill) as CloseDialog(editorHelpDialog)
+
+	Dialog(title="Model settings") settingsDialog as Relative(width=60%, height=80%)
+        Block(format=overflowAuto) as Relative(height=100%, offsetHeight=40px)
+			TemplateStamp(template=modelSettingsEditor) modelSettingsEditor
+		Divider
+		Block(layout=Horizontal EndJustified)
+			Button(title="Close", size=Small, highlight=Fill) as CloseDialog(settingsDialog)
+
+Template modelViewer as Relative(height=100%, width=100%)
+
+	Block(layout=Vertical Flexible CenterCenter, visible=false) languageNotLoadedBlock
+		Block(layout=Vertical Flexible, spacing=DP16, format=messageBlock) as Relative(height=100%, width=100%)
+			Block(layout=Vertical)
+				Text(value="Internal error", format=h2 airTop textCentered, translate=true)v
+				Text(value="Could not load model", format=textCentered greyColor, translate=true)
+
+	Block(layout=Vertical Flexible, visible=false) contentBlock
+		Block(layout=Horizontal, format=middleAirBottom)
+			Block(layout=Horizontal StartJustified)
+				Block as Absolute(width=400px) > Selector(view=TextView) fileSelector as ComboBox(placeholder="Select model file")
+		Text(value="No files in model", visible=false) noFilesMessage
+		DisplayStamp(display=intinoDslEditor, format=fullHeight) intinoDslEditor
+
+Template(layout=Vertical Flexible) modelBrowserTemplate as Relative(height=100%, width=100%)
+	Link(title="") removeFileTrigger as Action Affirmed("Are you sure to remove?")
+
+	Block(layout=Horizontal, format=headerPanel greyLightBackground leftSpaced rightSpaced)
+		Block(layout=Horizontal Flexible) > Text(value="Model", format=h6, translate=true)
+		Block(layout=Horizontal Center, format=smallAirLeft)
+			MaterialIconButton(title="Operations...", icon="MoreVert", size=Small) operationsTrigger as Action
+
+	Block(layout=Vertical Flexible)
+		Block(layout=Vertical) as AutoSize > DisplayStamp(display=intinoFileBrowser, format=displayHeaderPanel smallAirRight) fileBrowser
+		Block(layout=Vertical End, format=spaced) > File addFileField as Editable(showDropZone=true)
+
+	Dialog(title="") fileDialog as Absolute(width=400px, height=200px)
+        Block(layout=Horizontal) as Relative(height=100%, offsetHeight=40px)
+			Text fileField as Editable(placeholder="Indicate name") Labeled("Name") Focused
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Cancel", size=Small, format=airRight) as CloseDialog(fileDialog)
+            Button(title="Accept", size=Small, highlight=Fill) addFile as Action Readonly
+
+Template(layout=Vertical Flexible) resourcesBrowserTemplate as Relative(height=100%, width=100%)
+	Link(title="") removeFileTrigger as Action Affirmed("Are you sure to remove?")
+
+	Block(layout=Horizontal, format=headerPanel greyLightBackground leftSpaced rightSpaced)
+		Block(layout=Horizontal Flexible) > Text(value="Resources", format=h6, translate=true)
+		Block(layout=Horizontal Center, format=smallAirLeft)
+			MaterialIconButton(title="Operations...", icon="MoreVert", size=Small) operationsTrigger as Action
+
+	Block(layout=Vertical Flexible)
+		Block(layout=Vertical) as AutoSize > DisplayStamp(display=intinoFileBrowser, format=displayHeaderPanel smallAirRight) fileBrowser
+		Block(layout=Vertical End, format=spaced) > File addFileField as Editable(showDropZone=true)
+
+	Dialog(title="") fileDialog as Absolute(width=600px, height=350px)
+        Block(layout=Horizontal) as Relative(height=100%, offsetHeight=40px)
+        	Block(format=greyLightBackground) selectorBlock as Absolute(width=150px)
+				Selector fileDialogSelector as ListBox
+					Text(value="New file") newFileOption as Option
+					Text(value="Upload file") uploadFileOption as Option
+			Block(layout=Vertical Flexible, format=airLeft)
+				Block(format=airTop) fileFieldBlock as Conditional(selectorBlock.fileDialogSelector.newFileOption)
+					Text fileField as Editable(placeholder="Indicate name") Labeled("Name") Focused
+				Block(format=airTop airBottom) fileUploadBlock as Conditional(selectorBlock.fileDialogSelector.uploadFileOption)
+					File fileUploadField as Editable(showDropZone=true)
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Cancel", size=Small, format=airRight) as CloseDialog(fileDialog)
+            Button(title="Accept", size=Small, highlight=Fill) addFile as Action Readonly
+
+Template(layout=Vertical Flexible) browserTemplate as Relative(height=100%, width=100%)
+	DisplayStamp(display=intinoFileBrowser, format=displayHeaderPanel smallAirRight) fileBrowser
+
+Display intinoFileBrowser
+	Notification refresh as Object(intinoFileBrowserInfo)
+	Notification select as Object(intinoFileBrowserItem)
+	Notification openContextMenu as Object(intinoFileBrowserOperation) List
+	Request open as Text
+	Request rename as Object(intinoFileBrowserRenameInfo)
+	Request move as Object(intinoFileBrowserMoveInfo)
+	Request executeOperation as Object(intinoFileBrowserOperationInfo)
+
+Schema intinoFileBrowserInfo
+	Attribute itemAddress as Text
+	Attribute rootItem as Text
+	Attribute hideExtension as Bool
+	Attribute historyEnabled as Bool
+	Attribute items as Object(intinoFileBrowserItem) List
+	Attribute operations as Object(intinoFileBrowserOperation) List
+
+Schema intinoFileBrowserOperationInfo
+	Attribute operation as Text
+	Attribute target as Integer
+
+Schema intinoFileBrowserRenameInfo
+	Attribute id as Integer
+	Attribute newName as Text
+
+Schema intinoFileBrowserMoveInfo
+	Attribute file as Integer
+	Attribute directory as Text
+
+Schema intinoFileBrowserItem
+	Attribute id as Integer
+	Attribute name as Text
+	Attribute uri as Text
+	Attribute type as Word("Folder" "File")
+	Attribute isRoot as Bool
+	Attribute parents as Text List
+	Attribute children as Text List
+
+Schema intinoFileBrowserOperation
+	Attribute name as Text
+	Attribute shortcut as Object(intinoFileBrowserOperationShortcut)
+	Attribute enabled as Bool
+
+Schema intinoFileBrowserOperationShortcut
+	Attribute ctrlKey as Bool
+	Attribute shiftKey as Bool
+	Attribute altKey as Bool
+	Attribute key as Text
+
+Display intinoDslEditor
+	Notification setup as Object(intinoDslEditorSetup)
+	Notification refreshReadonly as Bool
+	Notification refreshFile as Object(intinoDslEditorFile)
+	Notification receiveContent
+	Request fileModified
+	Request fileContent as Object(intinoDslEditorFileContent)
+	Request executeCommand as Text
+	Request fileSelected as Text
+
+Schema intinoDslEditorSetup
+	Attribute dslName as Text
+	Attribute modelName as Text
+	Attribute modelRelease as Text
+	Attribute fileAddress as Text
+	Attribute readonly as Bool
+	Attribute files as Object(intinoDslEditorFile) List
+
+Schema intinoDslEditorFile
+	Attribute name as Text
+	Attribute model as Text
+	Attribute uri as Text
+	Attribute content as Text
+	Attribute language as Text
+	Attribute extension as Text
+	Attribute active as Bool
+	Attribute position as Object(intinoDslEditorFilePosition)
+
+Schema intinoDslEditorFileContent
+	Attribute file as Text
+	Attribute content as Text
+
+Schema intinoDslEditorFilePosition
+	Attribute line as Integer
+	Attribute column as Integer
+
+Template(layout=Vertical Flexible, format=consoleStyle) consoleTemplate
+	MaterialIconButton(title="Close", icon="Clear", size=Small, format=closeIcon) closeButton as Action
+	Text(value="Build output", format=h6 airLeft middleAirTop, translate=true)
+	Block(layout=Vertical Flexible, format=airTop airLeft airRight middleAirBottom)
+		TemplateStamp(template=consoleEntryTemplate) entries as Multiple(noItemsMessage="No messages")
+
+Template(layout=Horizontal Center, format=middleAirBottom) consoleEntryTemplate
+	MaterialIcon(icon="Info", format=smallIconSize airRight blueColor, visible=false) infoIcon
+	MaterialIcon(icon="Warning", format=smallIconSize airRight orangeColor, visible=false) warningIcon
+	MaterialIcon(icon="Error", format=smallIconSize airRight redColor, visible=false) errorIcon
+	Link(title="", format=airRight) file as Action Addressable(EditorElements.model)
+	Text(format=airRight) location
+	Text content
+
+Display editorHelpDisplay
+	Notification refresh

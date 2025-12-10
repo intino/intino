@@ -1,0 +1,313 @@
+dsl Konos
+
+use Models
+use Users
+use UI
+use Theme
+
+Template(layout=Horizontal Center) modelNameViewer
+
+	Block simpleNameBlock as Conditional
+		Text(format=modelViewTitle upperCase) nameField
+
+	Block(layout=Horizontal Center) qualifiedNameBlock as Conditional
+		Link(title="", format=modelViewTitle upperCase airRight) project as OpenPopover(projectBlock)
+		Text(value=":", format=modelViewTitleSeparator upperCase airRight)
+		Link(title="", format=modelViewTitle upperCase) module as OpenPopover(moduleBlock)
+
+	Block(format=popoverStyle) projectBlock as Popover
+		Block(format=middleSpaced bottomBordered) projectBlockHeader > Text(format=h5 bold, mode=Uppercase) projectBlockTitle
+		Block(format=smallAirTop middleLeftSpaced middleRightSpaced) projectBlockContent > TemplateStamp(template=projectViewer) projectViewer
+
+	Block(format=popoverStyle) moduleBlock as Popover
+		Block(format=middleSpaced bottomBordered) moduleBlockHeader > Text(format=h5 bold, mode=Uppercase) moduleBlockTitle
+		Block(format=smallAirTop middleLeftSpaced middleRightSpaced) moduleBlockContent > TemplateStamp(template=projectModuleViewer) moduleViewer
+
+Template projectViewer
+	Block(layout=Vertical Flexible)
+		TemplateStamp(template=projectModuleLinkViewer) modules as Multiple(noItemsMessage="no modules")
+		Block(visible=false) currentModuleBlock > TemplateStamp(template=projectModuleViewer) currentModule
+	Block(layout=Vertical, format=middleAirBottom)
+		Text(mode=Uppercase) newModuleField as Editable(placeholder="NEW MODULE")
+
+Template(layout=Horizontal Center, format=middleAirBottom) projectModuleLinkViewer
+	Text(value=" ", format=bubble) bubble
+	Link(title="", format=h5, visible=false) moduleLink as Action
+	Text(format=h5, visible=false) moduleText
+
+Template(format=airBottom) projectModuleViewer
+	Block(layout=Horizontal Center, visible=false) titleBlock
+		MaterialIconButton(title="Back", icon="ChevronLeft", visible=false, size=Small) back as Action
+		Text(format=h5) moduleName
+	Block entriesBlock > TemplateStamp(template=projectModuleEntryViewer) entries as Multiple(noItemsMessage="no models")
+
+Template(layout=Horizontal Center, format=smallAirBottom) projectModuleEntryViewer
+	Text(value=" ", format=bubble) bubble
+	Link(title="", format=h6, visible=false) titleLink as Action
+	Text(format=h6 bold, visible=false) titleText
+
+Template(layout=Horizontal) modelNameDialog
+
+	Dialog(title="Edit name") dialog as Absolute(height=600px, width=800px)
+        Block(layout=Vertical) as Relative(height=100%, offsetHeight=40px)
+			Selector typeSelector as RadioBox
+				Text(value="Simple name") simpleOption as Option
+				Text(value="Qualified name") qualifiedOption as Option
+
+			Block(format=doubleAirTop)
+				Block simpleNameBlock as Conditional(typeSelector.simpleOption)
+					Text(mode=Uppercase) nameField as Editable
+
+				Block qualifiedNameBlock as Conditional(typeSelector.qualifiedOption)
+					Text(format=airBottom) qualifiedNameField as Editable(placeholder="Fill project and module") Readonly
+					Block(layout=Horizontal Center)
+						Block(format=middleAirRight) as Relative(width=50%, offsetWidth=5px)
+							Text(value="Project")
+							Selector projectSelector as ComboBox(placeholder="Select project")
+							Link(title="Add project", format=smallAirTop) addProjectLink as Action
+						Block(format=middleAirLeft) as Relative(width=50%, offsetWidth=5px)
+							Text(value="Module")
+							Selector moduleSelector as ComboBox(placeholder="Select module")
+							Link(title="Add module", format=smallAirTop) addModuleLink as Action
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Cancel", size=Small, format=airRight) as CloseDialog(dialog)
+            Button(title="Save", size=Small, highlight=Fill) save as Action
+
+    Dialog(title="Add") addDialog as Absolute(width=300px, height=170px)
+        Block(layout=Vertical) as Relative(height=100%, offsetHeight=40px)
+    		Text(mode=Uppercase) addField as Editable
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Cancel", size=Small, format=airRight) as CloseDialog(addDialog)
+            Button(title="Add", size=Small, highlight=Fill) add as Action
+
+Template(layout=Horizontal) commitModelDialog
+
+	Dialog(title="Commit model") dialog as Absolute(height=300px, width=500px)
+        Block(layout=Vertical) as Relative(height=100%, offsetHeight=40px)
+
+			Block(layout=Vertical, visible=false) versionPropertiesBlock
+				Block(layout=Vertical EndJustified)
+					Selector versionTypeSelector as RadioBox
+
+				Block(layout=Vertical Flexible CenterCenter, format=bordered topSpaced bottomSpaced airTop)
+					Text(value="New version number", format=middleAirBottom)
+					Text(format=veryLargeFontSize) version
+
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Cancel", size=Small, format=airRight) as CloseDialog(dialog)
+            Button(title="Commit", size=Small, highlight=Fill) create as Action
+
+	TemplateStamp(template=downloadModelDialog) downloadModelDialog
+	TemplateStamp(template=languageExecutionLauncher) executionLauncher
+
+Template(layout=Horizontal) downloadModelDialog
+	Link(title="") downloadSilently as Download
+
+	Dialog(title="Download") dialog as Absolute(height=300px, width=550px)
+        Block(layout=Vertical) as Relative(height=100%, offsetHeight=40px)
+
+			Block(format=doubleAirBottom)
+				Text(value="Model file (zip format)", translate=true, format=h5 middleAirBottom)
+				Link(title="Download") download as Download
+
+			Block(format=doubleAirBottom)
+				Text(value="Model url", translate=true, format=h5 middleAirBottom)
+				Text modelUrl
+				Block(layout=Vertical, format=airTop)
+					Link(title="Copy URL", format=smallAirBottom) copyReleaseUrl as CopyToClipboard
+					Link(title="Copy commit") copyReleaseCommit as CopyToClipboard
+
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Close", size=Small, highlight=Fill) as CloseDialog(dialog)
+
+Template modelSettingsEditor
+	Link(title="") closeTrigger as CloseApp
+
+	Selector settingsTabSelector as Tabs(format=tabsStyle)
+		Text(value="General") generalOption as Option
+		Text(value="Share") collaboratorsOption as Option
+
+	Block(layout=Vertical, format=doubleAirLeft) as Relative(width=60%)
+		Block(layout=Vertical Flexible, format=doubleTopSpaced) generalBlock as Relative(width=95%) Conditional(settingsTabSelector.generalOption)
+			Block
+				Text(value="Name", translate=true, format=h5 middleAirBottom)
+				Block(layout=Horizontal Center)
+					Text(mode=Uppercase, format=airRight) modelNameField
+					Button(title="Edit", size=Small) editName as Action
+					TemplateStamp(template=modelNameDialog) nameDialog
+			Block(format=doubleAirTop)
+				Text(value="Description", translate=true, format=h5 middleAirBottom)
+				Text modelDescriptionField as Editable Memo(height=4Rows)
+			Block(format=doubleAirTop)
+				Text(value="DSL version", translate=true, format=h5 middleAirBottom)
+				Text(format=bold middleAirBottom) languageName
+				Selector languageSelector as ComboBox
+			Block(format=doubleAirTop, visible=false) accessTypeBlock
+				Text(value="Model access", translate=true, format=h5 middleAirBottom)
+				Switch(title="Model is private") accessTypeField
+			Block(format=doubleAirTop)
+				Text(value="Remove model", translate=true, format=h5)
+				Text(value="Removed models cannot be restored!", format=greyColor airBottom, translate=true)
+				Block(layout=Horizontal) > Button(title="Remove model...", highlight=Fill) removeModel as Action Readonly Affirmed("Are you sure to remove model?")
+			Block(format=doubleAirTop, visible=false) cloneModelBlock
+				Text(value="Clone model", translate=true, format=h5)
+				Text(value="Copy both model files and resource files to a new model", format=greyColor airBottom, translate=true)
+				Block(layout=Horizontal) > Button(title="Clone model...", highlight=Fill) cloneModel as Action Affirmed("Cloning the model will create a copy and open it. Do you want to proceed?")
+
+		Block(layout=Vertical Flexible, format=doubleTopSpaced) collaboratorsBlock as Relative(width=95%) Conditional(settingsTabSelector.collaboratorsOption)
+			TemplateStamp(template=collaboratorsTemplate) collaboratorsStamp
+
+Template(layout=Horizontal Center, format=tag) tagEditor
+	Text(format=smallAirRight) nameField
+	MaterialIconButton(title="Delete", icon="Clear", size=Small, format=smallIconSize) delete as Action
+
+Template(layout=Vertical) createLanguageEditor
+	Block(format=whiteBackground bordered doubleSpaced)
+		Text(format=h4) metamodelTitle
+		Text(value="You are about to create a new DSL associated with %s. To ensure uniqueness and proper organization, please provide the following details.", format=description doubleAirBottom)
+		TemplateStamp(template=languageEditor) editorStamp
+	Block(layout=Horizontal EndJustified, format=airTop)
+		Block(layout=Horizontal EndJustified) > Button(title="Create", highlight=Fill) create as Action Readonly
+
+Template languageEditor as Relative(width=100%, height=100%)
+	Link(title=" ") change as Action Affirmed("The DSL properties is about to be changed. This operation will affect all generated models.")
+
+	Block(layout=Horizontal Center Wrap)
+		Block(layout=Horizontal Wrap)
+			Block(layout=Vertical, format=doubleAirRight airTop)
+				Text(value="Collection", translate=true, format=h5 airRight)
+				Block(layout=Horizontal Center)
+					Block as Absolute(width=300px) > Selector(format=dslFieldInput) collectionSelector as ComboBox(placeholder="Select collection")
+					MaterialIconButton(title="Help", icon="Help") as OpenPopover(popover=collectionPopover, triggerEvent=MouseOver)
+					Block(format=doubleSpaced) collectionPopover as Popover Absolute(width=300px)
+						Text(value="The collection acts as a namespace for your DSLs. It prevents naming conflicts between users and helps organize DSLs by ownership.")
+				Block(format=smallAirTop) > TemplateStamp(template=createCollectionDialog) createCollectionDialog
+
+			Block(layout=Vertical, format=doubleAirRight airTop)
+				Text(value="Name", translate=true, format=h5 middleAirBottom)
+				Block(layout=Horizontal)
+					Block(format=relative)
+						Text(format=dslFieldInput, mode=Lowercase) nameField as Editable Readonly
+						MaterialIcon(icon="Check", color="green", format=veryLargeIconSize rightIconField, visible=false) validNameIcon
+						MaterialIcon(icon="Clear", color="red", format=veryLargeIconSize rightIconField, visible=false) invalidNameIcon
+					MaterialIconButton(title="Help", icon="Help") as OpenPopover(popover=namePopover, triggerEvent=MouseOver)
+					Block(format=doubleSpaced) namePopover as Popover Absolute(width=300px)
+						Text(value="The name identifies your DSL within the selected domain. It must be unique inside that domain.")
+
+			Block(layout=Vertical, format=doubleAirRight airTop)
+				Text(value="Private", translate=true, format=h5 middleAirBottom)
+				Block(layout=Horizontal)
+					Switch(title="") privateField
+					MaterialIconButton(title="Help", icon="Help") as OpenPopover(popover=privatePopover, triggerEvent=MouseOver)
+					Block(format=doubleSpaced) privatePopover as Popover Absolute(width=300px)
+						Text(value="Only users with access to selected collection can use this DSL.")
+
+		Block(layout=Vertical, format=doubleAirRight airTop)
+			TemplateStamp(template=languageLogoDialog) languageLogoDialog
+
+	Block(format=airTop doubleAirBottom)
+		Text(format=redColor) message
+
+Template(layout=Horizontal Center) languageLogoDialog
+	Image(format=forgeLogoStyle airRight, colorInvertedWithDarkMode=true) logo as Absolute(height=50px)
+	Link(title="change") openDialogTrigger as OpenDialog(dialog) Readonly
+
+	Dialog(title="Change logo") dialog as Absolute(width=800px, height=500px)
+        Block(format=overflowAuto) as Relative(height=100%, offsetHeight=40px)
+        	Block(layout=Horizontal CenterCenter, format=airBottom airLeft)
+        		Image(format=forgeLogoStyle airRight, colorInvertedWithDarkMode=true) logoPreview as Absolute(height=50px)
+        		Text languageId
+        	Block(layout=Horizontal, format=doubleAirTop)
+        		Block(layout=Vertical CenterCenter, format=rightBordered) as Relative(width=50%)
+					Block as Absolute(height=165px)
+						Image(format=forgeLogoStyle, colorInvertedWithDarkMode=true) logoField as Editable Absolute(height=150px)
+					Text(value="Upload an image in PNG format", translate=true)
+					Text(value="Transparent background", translate=true)
+					Text(value="Black foreground elements only", translate=true)
+					Text(value="Recommended size: 100x100 pixels", translate=true)
+					Text(value="Square and centered for best display", translate=true)
+        		Block(layout=Vertical CenterCenter, format=doubleLeftSpaced doubleRightSpaced) as Relative(width=50%)
+        			Block as Absolute(height=98px)
+						Button(title="generate", format=blockGenerateLogoAction) generateLogo as Action
+					Text(value="Automatically create an icon matching the DSL name and domain style", format=airTop, translate=true)
+		Divider
+        Block(layout=Horizontal EndJustified)
+        	Button(title="Cancel", size=Small, format=airRight) cancelLogo as Action
+        	Button(title="Change", size=Small, highlight=Fill) changeLogo as Action
+
+Template(layout=Horizontal) languageExecutionLauncher
+	Link(title=" ") siteLauncher as OpenSite(site=empty, target=Blank)
+
+	Dialog(title="Execution instructions") localDialog as Absolute(width=800px, height=600px)
+        Block(format=overflowAuto) as Relative(height=100%, offsetHeight=40px)
+			Text(value="To run this model locally, make sure your environment is set up correctly. Below you’ll find installation notes. Once everything is ready, you can copy and run the command shown to execute the model.", format=middleAirBottom)
+			Text(format=airTop) execution as Editable Memo(height=20Rows) Readonly
+			Block(layout=Horizontal) > Link(title="Copy", format=middleAirTop upperCase) copy as CopyToClipboard
+			Block(layout=Horizontal) > Link(title="Installation notes", format=middleAirTop upperCase, visible=false) openInstallationNotes as OpenSite(site=empty, target=Blank)
+
+		Divider
+        Block(layout=Horizontal EndJustified)
+        	Button(title="Close", size=Small) as CloseDialog(localDialog)
+
+Template createCollectionDialog as Relative(width=100%)
+	Link(title="Create new") as OpenDialog(dialog)
+
+	Dialog(title="") dialog as Absolute(width=400px, height=220px)
+        Block(format=overflowAuto) as Relative(height=100%, offsetHeight=40px)
+        	Text(format=description airBottom) hint
+        	Block(format=relative)
+				Text(format=dslFieldInput, mode=Lowercase) nameField as Editable(placeholder="e.g. my-collection")
+				MaterialIcon(icon="Check", color="green", format=veryLargeIconSize rightIconField, visible=false) validIcon
+				MaterialIcon(icon="Clear", color="red", format=veryLargeIconSize rightIconField, visible=false) invalidIcon
+		Divider
+        Block(layout=Horizontal EndJustified)
+        	Button(title="Close", size=Small, format=airRight) as CloseDialog(dialog)
+        	Button(title="Create", size=Small, highlight=Fill) create as Action
+
+Template(layout=Horizontal Center, format=autoHeight) modelsDialog as Relative(width=100%)
+	Button(title="New", size=Small, highlight=Outline, visible=false) addModelTrigger as Action
+	Block(layout=Horizontal Center Flexible, visible=false) catalogOperations
+		Block(layout=Horizontal Flexible EndJustified, format=airRight)
+			Link(title="most recent", format=airRight, visible=false) mostRecentLink
+			Text(value="most recent", format=airRight, visible=false) mostRecentText
+			Link(title="last modified", visible=false) lastModifiedLink
+			Text(value="last modified", visible=false) lastModifiedText
+		Block > SearchBox(collections=empty) searchBox
+
+	TemplateStamp(template=licenseDialog) licenseDialog
+
+Template addLicenseEditor
+	Text licenseField as Editable(placeholder="Paste license here")
+
+	Dialog(title="Invalid license") failureDialog
+        Block(format=overflowAuto relative) as Relative(height=100%, offsetHeight=40px)
+        	Text(value="Failure! The license code is invalid or has already been used", format=airBottom) failureMessage
+		Divider
+        Block(layout=Horizontal EndJustified)
+        	Button(title="Close", size=Small, highlight=Fill) as CloseDialog(failureDialog)
+
+Template licenseDialog
+
+	Dialog(title="License required") dialog
+        Block(format=overflowAuto relative) as Relative(height=100%, offsetHeight=40px)
+        	Block(format=doubleAirBottom) > Text message
+		Divider
+        Block(layout=Horizontal EndJustified)
+        	Button(title="Close", size=Small, format=airRight) as CloseDialog(dialog)
+        	Button(title="Renew", size=Small, highlight=Fill, visible=false) renew as Action
+
+	TemplateStamp(template=renewLicenseDialog) renewDialog
+
+Template renewLicenseDialog
+
+	Dialog(title="renew license") dialog
+        Block(format=overflowAuto relative) as Relative(height=100%, offsetHeight=40px)
+        	Block(format=doubleAirBottom) > Text message
+		Divider
+        Block(layout=Horizontal EndJustified)
+        	Button(title="Cancel", size=Small, format=airRight) as CloseDialog(dialog)
+        	Button(title="Rewew", size=Small, highlight=Fill) renew as Action Affirmed("Confirm license renewal to continue") Readonly

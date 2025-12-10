@@ -1,0 +1,41 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical Flexible) collaboratorsTemplate
+
+	Block
+		Text(value="Add people", translate=true, format=h5 middleAirBottom)
+//		Selector peopleField as CollectionBox(openMode=Input, multipleSelection=true, placeholder="Type at least 3 characters to search")
+//			List(itemClass="io.quassar.editor.model.User") peopleList as Selectable
+//				Mold
+//					Item(height = 30px) userItem
+//						Text(format=h5) fullName
+//						Text email
+		Text(value="Add a list of emails separated by either semicolon or newline", translate=true, format=message middleAirBottom)
+		Text peopleField as Editable Memo(height=8Rows)
+		Block(layout=Horizontal) > Button(title="Invite", highlight=Fill, format=middleAirTop) invite as Action Readonly
+
+	Block(format=doubleAirTop)
+		Text(value="Owner", translate=true, format=h5 middleAirBottom)
+		Text ownerField
+
+	Block(format=doubleAirTop doubleAirBottom)
+		Text(value="Collaborators", translate=true, format=h5 middleAirBottom) collaboratorsTitle
+		TemplateStamp(template=collaboratorItemTemplate) collaborators as Multiple(noItemsMessage="No collaborators have been defined for this model yet.")
+
+Template collaboratorItemTemplate
+	Block(format=item) as HoverContainer
+		Block(layout=Horizontal Center)
+			Text(format=doubleAirRight) name
+			Block(layout=Horizontal Center, format=bringToFront doubleAirLeft, hidden=IfNotHover)
+				Link(title="remove access", format=blueColor upperCase) removeUser as Action
+
+Template addCollaboratorDialog
+
+	Dialog(title="Properties") dialog as Absolute(width=450px, height=300px)
+        Block(format=overflowAuto) as Relative(height=100%, offsetHeight=40px)
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Cancel", size=Small, format=airRight) as CloseDialog(dialog)
+            Button(title="Add", size=Small, highlight=Fill) add as Action

@@ -1,0 +1,421 @@
+dsl Konos
+
+use Editors
+use Models
+use UI
+use Theme
+
+Template(layout=Horizontal Center, format=subHeaderStyle) languageHeaderTemplate
+	Block(layout=Horizontal Flexible)
+		Text(format=bold h5 airLeft, visible=false) title
+	Block(layout=Horizontal Center EndJustified)
+		TemplateStamp(template=languageToolbar) toolbar
+
+Template(layout=Horizontal Center) languageToolbar
+	Text(value="", format=doubleAirRight bold) aboutText
+	Link(title="", format=doubleAirRight, visible=false) aboutLink as Action Addressable(EditorElements.language)
+	Text(value="help", format=doubleAirRight bold, visible=false) helpText
+	Link(title="help", format=doubleAirRight, visible=false) helpLink as Action Addressable(EditorElements.language)
+	Text(value="examples", format=doubleAirRight bold, visible=false) examplesText
+	Link(title="examples", format=doubleAirRight, visible=false) examplesLink as Action Addressable(EditorElements.language)
+	Image(format=middleAirRight, mobileReduceFactor=75%, colorInvertedWithDarkMode=true) languageLogo as Absolute(height=25px)
+
+Template languagesTemplate as Relative(height=100%, width=100%)
+
+	Block(layout=Horizontal Center)
+		Text(visible=false, format=airTop doubleAirLeft doubleAirRight airBottom) searchBox as Editable(placeholder="Search...")
+
+	Block(layout=Vertical Flexible) bodyBlock as Relative(width=100%) AutoSize
+		Block(layout=Vertical Flexible Center) contentBlock as Relative(width=100%)
+			List(itemClass="io.quassar.editor.model.Language", pageSize=20) languagesCatalog
+				noItemsMessage = ""
+				Mold
+					Item(height=100px, format=relative) languageItem
+						Link(title="&nbsp;", format=fullSpaceLink, visible=false) logoLink as Action Addressable(EditorElements.language)
+						Link(title="&nbsp;", format=fullSpaceLink, visible=false) logoSelectorLink as Action
+						Block(layout=Horizontal Flexible, format=doubleBottomSpaced topSpaced bottomBordered)
+							Block(layout=Vertical Center) as Absolute(width=100px)
+								Image(colorInvertedWithDarkMode=true) logo as Absolute(width=60px)
+							Block(layout=Vertical Flexible)
+								Link(title="", format=h4 lowerCase, visible=false) name as Action Addressable(EditorElements.language)
+								Link(title="", format=h4 lowerCase, visible=false) nameSelector as Action
+								Text(format=h6 bold) title
+								Text description
+
+Template languagesLandingTemplate as Relative(height=100%, width=100%)
+
+	Block(layout=Horizontal Center)
+		Text(visible=false, format=airTop doubleAirLeft doubleAirRight airBottom) searchBox as Editable(placeholder="Search...")
+
+	Block(layout=Vertical Flexible) bodyBlock as Relative(width=100%) AutoSize
+		Block(layout=Vertical Flexible Center) contentBlock as Relative(width=100%)
+			List(itemClass="io.quassar.editor.model.Language", pageSize=5) languagesLandingCatalog as Navigable(position=Bottom)
+				noItemsMessage = ""
+				Mold
+					Item(height=100px, format=relative) LanguageLandingItem
+						Link(title="&nbsp;", format=fullSpaceLink, visible=false) logoLink as Action Addressable(EditorElements.language)
+						Link(title="&nbsp;", format=fullSpaceLink, visible=false) logoSelectorLink as Action
+						Block(layout=Horizontal Flexible, format=doubleBottomSpaced topSpaced bottomBordered)
+							Block(layout=Vertical Center, format=relative) as Absolute(width=100px)
+								Image(colorInvertedWithDarkMode=true) logo as Absolute(width=60px)
+							Block(layout=Vertical Flexible)
+								Link(title="", format=h4 lowerCase, visible=false) name as Action Addressable(EditorElements.language)
+								Link(title="", format=h4 lowerCase, visible=false) nameSelector as Action
+								Text(format=h6 bold) title
+								Text(cropWithEllipsis=350Chars) description
+
+Template languagesCollectionTemplate as Relative(height=100%, width=100%)
+
+	Block(layout=Horizontal Center)
+		Text(visible=false, format=middleAirTop middleAirBottom) searchBox as Editable(placeholder="Search...")
+
+	Text(value="There are no DSLs assigned to this collection", visible=false) noItemsMessage
+
+	Block(layout=Vertical Flexible) bodyBlock as Relative(width=100%) AutoSize
+		Block(layout=Vertical Flexible Center) contentBlock as Relative(width=100%)
+			Magazine(itemClass="io.quassar.editor.model.Language", pageSize=20) languagesCollectionCatalog
+				noItemsMessage = ""
+				Mold
+					Item(height=10px, format=relative) languageCollectionItem
+						Link(title="&nbsp;", format=fullSpaceLink) logoLink as Action Addressable(EditorElements.language)
+						Block(layout=Horizontal Flexible, format=middleTopSpaced middleBottomSpaced)
+							Block(layout=Vertical Center, format=relative)
+								Image(colorInvertedWithDarkMode=true) logo as Absolute(width=20px)
+							Block(layout=Vertical Flexible, format=collectionItemLink)
+								Link(title="", format=h4 lowerCase) name as Action Addressable(EditorElements.language)
+
+Template languageTemplate as Relative(height=100%, width=100%, offsetHeight=2px)
+	TemplateStamp(template=licenseExpiredBanner) licenseExpiredBanner
+	TemplateStamp(template=languageHeaderTemplate, visible=false) headerStamp
+
+	Block(layout=Vertical Flexible, format=whiteBackground) bodyBlock as Relative(width=100%)
+
+		Block(layout=Vertical Flexible CenterCenter, visible=false) notFoundBlock
+			Block(layout=Vertical Flexible, spacing=DP16, format=messageBlock) as Relative(height=100%, width=60%)
+				Block(layout=Vertical)
+					Text(value="Not found", format=h2 airTop textCentered greyHardColor, translate=true)
+					Text(value="Sorry, we can't find the DSL you are visiting", format=h5 textCentered greyColor, translate=true)
+					Block(layout=Horizontal) > Button(title="home", format=airTop, highlight=Outline) as Action Addressable(EditorElements.home)
+
+		Block(layout=Vertical Flexible, format=whiteBackground) helpBlock as Relative(width=100%) AutoSize Conditional
+			Block(layout=Vertical Flexible Center) as Absolute(width=1024px)
+				Block(layout=Vertical Flexible, format=whiteBackground) as Relative(width=100%, height=100%)
+					Block(layout=Horizontal Center, format=bottomLightBordered middleTopSpaced middleBottomSpaced)
+						Block(layout=Horizontal Flexible)
+							Text(format=h2) helpTitle
+						Block(layout=Horizontal EndJustified, format=doubleAirRight)
+							Image(format=airRight, mobileReduceFactor=75%, colorInvertedWithDarkMode=true) helpLogo as Absolute(height=50px)
+					HtmlViewer helpStamp
+
+		Block(layout=Vertical Flexible) mainBlock as Relative(width=100%) Conditional
+
+			Block(layout=Horizontal, format=absolute doubleAirLeft airTop, visible=false) notLoggedBlock
+				Text(value="You are not logged in. Please log in to access your models.", format=h5 textCentered greyColor, translate=true)
+
+			Block(layout=Horizontal Flexible) mainContentBlock
+				Block(layout=Horizontal Flexible, format=whiteBackground) mainResizableBlock as Relative(width=100%, height=100%) Resizable(minSize=0%)
+
+					Block(layout=Vertical Flexible, format=doubleLeftSpaced doubleRightSpaced bottomSpaced topSpaced) modelsBlock as Relative(width=55%)
+						Block(format=middleAirBottom) > TemplateStamp(template=modelsDialog) modelsDialog
+						TemplateStamp(template=modelsTemplate) modelsStamp
+
+					Block(layout=Vertical Flexible) homeBlock as Relative(width=45%)
+						Block(layout=Vertical Flexible) viewsBlock as AutoSize Relative(height=100%)
+							TemplateStamp(template=languageExplorer) languageExplorer
+
+				Block(layout=Vertical, visible=false, format=bordered relative) collapsedRightPanel as Absolute(width=70px)
+					Block(format=rightPanelBorder)
+					Block(layout=Horizontal Center, format=headerPanel greyLightBackground)
+						Block(layout=Horizontal Center EndJustified Flexible, format=airLeft airRight)
+							MaterialIconButton(title="open panel", icon="ChevronLeft", size=Small, format=airRight) expandRightPanel as Action
+					Block(layout=Vertical Flexible, format=relative) as Relative(height=100%)
+						Block(layout=Vertical Flexible) as AutoSize > Link(title=" ", format=collapsedBlockLink) expandRightPanelFull as Action
+
+Template(layout=Vertical Flexible, format=minWidth) languageExplorer as Relative(height=100%, width=100%)
+
+	Block(layout=Horizontal Center Wrap, format=headerPanel greyLightBackground)
+		Block(layout=Horizontal Center Flexible, format=airLeft minTitleEditorWidth)
+			Block(layout=Vertical Flexible, visible=false, format=airLeft) simpleTitle > Text(format=h5 minHeaderWidth) title
+			Block(layout=Horizontal Flexible, visible=false, format=airLeft airRight) releaseTitle
+				Text(format=h5 smallAirRight minHeaderWidth) titlePrefix
+				Block(layout=Horizontal EndJustified) as Absolute(width=120px) > Selector(format=h5) releaseSelector as ComboBox(view=TextView)
+			Block(layout=Horizontal EndJustified)
+				TemplateStamp(template=modelsDialog, visible=false) examplesDialog
+				IconButton(title="", icon="/images/circle-up.png", darkIcon="/images/circle-up-dark.png", darkColor="#9399ff", visible=false) forgeLink as OpenSite(site=empty, target=Blank)
+			MaterialIconButton(title="close panel", icon="ChevronRight", size=Small, format=doubleAirRight) collapseExplorer as Action
+
+	Block(layout=Vertical Flexible) aboutBlock as Conditional Relative(height=100%)
+		Block(layout=Vertical Flexible, format=doubleTopSpaced doubleLeftSpaced doubleRightSpaced doubleBottomSpaced) aboutContent as AutoSize Relative(width=100%, height=100%)
+			Block(format=doubleAirBottom)
+				Text(value="title", format=h6 bold)
+				Text(format=noHtmlStyle) aboutTitle as Code(Html)
+			Block(format=doubleAirBottom)
+				Text(value="what is it", format=h6 bold)
+				Text(format=noHtmlStyle) aboutDescription as Code(Html)
+			Block(format=doubleAirBottom)
+				Text(value="how to cite", format=h6 bold)
+				Text(format=noHtmlStyle) aboutCitation as Code(Html)
+				Link(title="Copy cite", format=middleAirTop, visible=false) aboutCitationLink as CopyToClipboard
+			Block(format=doubleAirBottom)
+				Text(value="copyright and license", format=h6 bold)
+				Text(format=noHtmlStyle) aboutLicense as Code(Html)
+
+	Block(layout=Vertical Flexible) versionsBlock as Conditional Relative(height=100%)
+		Block as AutoSize Relative(width=100%, height=100%) > HtmlViewer releaseHelpStamp
+
+	Block(layout=Vertical Flexible) examplesBlock as Conditional Relative(height=100%)
+		TemplateStamp(template=modelsTemplate) examplesStamp
+
+Template languageForgeTemplate as Relative(height=100%, width=100%)
+	Block(layout=Horizontal Flexible) as Relative(height=100%, width=100%) Resizable(minSize=30%)
+		Block(format=forgePanelBackground minResizablePanelWidth) as Relative(width=30%)
+			Block(layout=Vertical Flexible, format=doubleSpaced) as AutoSize Relative(height=100%)
+				Block(layout=Vertical Flexible) as Relative(height=100%)
+					Block(layout=Horizontal Center, format=airBottom)
+						Block(layout=Horizontal Center Flexible)
+							Image(format=forgeLogoStyle, colorInvertedWithDarkMode=true) logo as Absolute(width=50px)
+							Text(format=h2 airRight) languageName
+						Block(layout=Horizontal EndJustified)
+							MaterialIconButton(title="remove", icon="Delete", size=Small, visible=false) removeLanguage as Action Signed(signText="To confirm deletion, please type the full name of the DSL. Deleting this DSL will permanently remove all models created with it. This action cannot be undone.", mode=SimpleText)
+					Block(layout=Vertical Flexible)
+						Link(title="properties") infoLink as Action
+						Link(title="metamodel") metamodelLink as OpenSite(site=empty)
+					Block(layout=Horizontal Center, format=doubleAirTop middleAirLeft middleAirBottom)
+						Block(layout=Vertical Flexible) > Text(value="Releases", translate=true, format=h5 bold)
+						Block(layout=Horizontal EndJustified) > MaterialIconButton(title="refresh", icon="Refresh", size=Small) refreshVersions as Action
+					Block(format=airBottom) as AutoSize > TemplateStamp(template=releaseSelectorOption, format=fullHeight) versionSelector as Multiple(noItemsMessage="No versions")
+				Block(layout=Vertical EndJustified, visible=false) parentLanguageBlock
+					Block(format=relative)
+						Link(title="", format=fullSpaceLink) parentLanguageLink as Action Addressable(EditorElements.language)
+						Image(colorInvertedWithDarkMode=true) parentLanguageImage as Absolute(width=80px)
+					Text(format=metaForgeCredits) parentLanguageTitle
+		Block(layout=Vertical Flexible) as Relative(width=70%)
+			Selector viewSelector as Tabs(format=tabsStyle) Addressable(EditorElements.forge)
+				Text(value="Modeling") kit as Option
+				Text(value="Execution") execution as Option
+			Block(layout=Vertical Flexible)
+				Block as AutoSize Relative(height=100%, width=100%)
+					Block(layout=Vertical) as Absolute(width=800px)
+						Block(layout=Vertical Flexible) kitBlock as Conditional(viewSelector.kit)
+							TemplateStamp(template=languageKitTemplate) kitStamp
+						Block(layout=Vertical Flexible) executionBlock as Conditional(viewSelector.execution)
+							TemplateStamp(template=languageExecutionTemplate) executionStamp
+
+	TemplateStamp(template=releaseSelectorOption, visible=false)
+
+	Dialog(title="DSL Properties") infoDialog as Relative(width=60%, height=80%)
+        Block as Relative(height=100%, offsetHeight=40px)
+			TemplateStamp(template=languageInfoTemplate) infoStamp
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Close", size=Small, format=airRight, highlight=Fill) as CloseDialog(infoDialog)
+
+Template(layout=Horizontal) releaseSelectorOption
+	Block(layout=Vertical Flexible, format=relative) contentBlock as HoverContainer
+		Block(layout=Vertical Flexible) > Link(title="", format=versionSelectorLink) version as Action Addressable(EditorElements.forge)
+		Block(hidden=IfNotHover, format=releaseRemoveLinkBlock) > Link(title="remove", format=releaseRemoveLink) remove as Action Signed(signText="To confirm deletion, please type the version of the release.", mode=SimpleText)
+Template(layout=Vertical Flexible) languageInfoTemplate
+
+	Block(layout=Vertical Center) as AutoSize
+		Block(layout=Vertical Flexible, format=doubleTopSpaced) generalBlock as Relative(width=95%)
+			TemplateStamp(template=languageEditor) editorStamp
+			Block(format=doubleAirBottom)
+				TemplateStamp(template=languagePropertiesTemplate) propertiesStamp
+
+Template(layout=Vertical Flexible) languagePropertiesTemplate
+	Block(format=doubleAirBottom)
+		Text(value="Title", translate=true, format=h5 middleAirBottom)
+		Text titleField as Editable
+	Block(format=doubleAirBottom)
+		Text(value="What is it", translate=true, format=h5 middleAirBottom)
+		Text descriptionField as Editable Memo(height=5Rows)
+	Block(format=doubleAirBottom)
+		Text(value="How to cite", translate=true, format=h5 middleAirBottom)
+		Text citationField as Editable Memo(height=5Rows)
+		Text(value="Cite link", translate=true, format=middleAirTop middleAirBottom)
+		Text citationLinkField as Editable Memo(height=5Rows)
+	Block(format=doubleAirBottom)
+		Text(value="Copyright and license", translate=true, format=h5 middleAirBottom)
+		Text licenseField as Editable Memo(height=5Rows)
+
+	Block(format=doubleAirBottom)
+		Text(value="Tags", translate=true, format=h5 middleAirBottom)
+		TemplateStamp(template=tagEditor) tags as Multiple("No tags", arrangement=Horizontal, spacing=DP8)
+		Block(layout=Horizontal, format=airTop) > Button(title="Add tag", size=Small, highlight=Outline) as OpenDialog(addTagDialog)
+
+	Dialog(title="Add tag") addTagDialog as Absolute(width=280px, height=200px)
+        Block as Relative(height=100%, offsetHeight=40px)
+        	Text tagField as Editable(placeholder="Indicate tag name") Labeled("Tag") Focused
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Cancel", size=Small, format=airRight) as CloseDialog(addTagDialog)
+            Button(title="Accept", size=Small, highlight=Fill) addTag as Action
+
+Display helpEditor
+	Notification refresh as Text
+	Request update as Text
+
+Template(layout=Vertical Flexible, format=doubleSpaced) languageKitTemplate
+	Link(title="") openModel as OpenSite(site=empty)
+
+	Block(layout=Vertical Flexible, visible=false) selectVersionBlock
+		Text(value="Select version on right panel to open kit")
+
+	Block(layout=Vertical Flexible CenterCenter, visible=false) noVersionsBlock
+		Block(layout=Vertical CenterCenter) as Relative(width=40%)
+			Text(value="You haven’t committed the metamodel yet. A commit is required to create a DSL release. Please go to the metamodel and commit your changes.", format=h5 textCentered)
+			Button(title="Goto metamodel", highlight=Fill, format=doubleAirTop) metamodelLink as OpenSite(site=empty)
+
+	Block(layout=Vertical Flexible CenterCenter, visible=false) versionNotCreatedBlock
+		Block(layout=Vertical CenterCenter) as Relative(width=40%)
+			Text(value="This version of the DSL has not been defined yet. To define its kit, you must first create the version.", format=h5 textCentered)
+			Button(title="Create version", highlight=Fill, format=doubleAirTop) createVersion as Action
+
+	Block(layout=Vertical Flexible, visible=false) versionBlock
+
+		Block(format=doubleAirBottom)
+			Text(value="In Quassar", translate=true, format=h5 bold bottomBordered fullWidth)
+
+			Block(format=airTop)
+				Link(title="Explore", format=h5 airBottom) startModeling as Action Addressable(EditorElements.language)
+
+				Block(format=doubleAirBottom)
+					Text(value="Define the base template", translate=true, format=h5 bold)
+					Block(format=autoHeight) as Relative(width=80%) > Text(value="You can define the base template that will be used to create models with this version of the DSL. Every new model will start from this template, giving you full control over its initial structure.", translate=true, format=middleAirBottom)
+					Block(layout=Horizontal, visible=false) templateDefined
+						Button(title="Define", format=blockKitAction) templateLink as OpenSite(site=empty, target=Blank)
+					Block(layout=Horizontal, visible=false) templateNotDefined
+						Button(title="Define", format=blockKitAction) createTemplate as Action
+
+				Block(format=doubleAirBottom autoHeight)
+					Text(value="Edit the help", translate=true, format=h5 bold)
+					Block(format=autoHeight) as Relative(width=80%) > Text(value="You can edit the help content that will be shown for this version of the DSL. This way, your users will always see up-to-date and relevant guidance based on the current features.", translate=true, format=middleAirBottom)
+					Block(layout=Horizontal)
+						Button(title="Edit", format=blockKitAction) editHelpTrigger as OpenDialog(dialog=helpDialog)
+
+				Block(format=doubleAirBottom)
+					Text(value="Provide examples", translate=true, format=h5 bold)
+					Block(format=autoHeight) as Relative(width=80%) > Text(value="You can optionally provide example models created with this versión of the DSL. These examples serve as practical references to help users understand how to use the DSL effectively. They can include common use cases, full configurations, or edge cases to illustrate specific features.", translate=true, format=middleAirBottom)
+					Block(layout=Horizontal) > Button(title="Add", format=blockKitAction) as OpenDialog(dialog=examplesDialog)
+
+		Block(format=doubleAirBottom)
+			Text(value="In your own environment", translate=true, format=h5 bold bottomBordered fullWidth)
+
+			Block(format=airTop)
+				Block(format=doubleAirBottom)
+					Text(value="Run and Customize your own Language Server", translate=true, format=h5 bold)
+					Block(format=autoHeight) as Relative(width=80%) > Text(value="Use the provided Maven dependency to deploy your own language server. Run it as-is, or extend it with your own validations, rules, and behaviors.", translate=true, format=middleAirBottom)
+					TemplateStamp(template=dependencyTemplate) dependencies as Multiple(arrangement=Horizontal, spacing=DP16, noItemsMessage="There are no language servers available")
+
+	Dialog(title="Help") helpDialog as FullScreen
+        Block as Relative(height=100%)
+			DisplayStamp(display=helpEditor, format=fullHeight) helpEditor
+
+	Dialog(title="") examplesDialog as Relative(height=80%, width=80%)
+        Block as Relative(height=100%, offsetHeight=40px)
+			Block(format=middleAirBottom) > TemplateStamp(template=modelsDialog) modelsDialog
+			TemplateStamp(template=modelsTemplate) modelsCatalog
+		Divider
+        Block(layout=Horizontal EndJustified)
+            Button(title="Close", size=Small, format=airRight, highlight=Fill) as CloseDialog(examplesDialog)
+
+Template(layout=Vertical Flexible, format=doubleSpaced) languageExecutionTemplate
+
+	Block(layout=Vertical Flexible, visible=false) selectVersionBlock
+		Text(value="Select version on right panel to open execution environment")
+
+	Block(layout=Vertical Flexible CenterCenter, visible=false) noVersionsBlock
+		Block(layout=Vertical CenterCenter) as Relative(width=40%)
+			Text(value="You haven’t committed the metamodel yet. A commit is required to create a DSL release. Please go to the metamodel and commit your changes.", format=h5 textCentered)
+			Button(title="Goto metamodel", highlight=Fill, format=doubleAirTop) metamodelLink as OpenSite(site=empty)
+
+	Block(layout=Vertical Flexible CenterCenter, visible=false) versionNotCreatedBlock
+		Block(layout=Vertical CenterCenter) as Relative(width=40%)
+			Text(value="This version of the DSL has not been defined yet. To define its execution environments, you must first create the version.", format=h5 textCentered)
+			Button(title="Create version", highlight=Fill, format=doubleAirTop) createVersion as Action
+
+	Block(layout=Vertical Flexible, visible=false) versionBlock
+
+		Block(format=middleAirBottom) dependencyBlock
+			Text(value="1. Build your execution logic", translate=true, format=h5 bold)
+			Block(format=autoHeight) as Relative(width=80%) > Text(value="Use the provided Maven dependency to read and parse models created with this version of the DSL. Implement the runtime logic needed to execute them. This could involve compiling, transforming, or running them directly.", translate=true, format=airBottom)
+			TemplateStamp(template=dependencyTemplate) dependencies as Multiple(arrangement=Horizontal, spacing=DP16, noItemsMessage="There are no readers available")
+
+			Block(format=doubleAirBottom)
+				Text(value="Examples of code usage", translate=true, format=h7)
+				Block(layout=Horizontal Center, format=airBottom)
+					Text(value="Starting from a:", format=airRight)
+					TemplateStamp(template=linkTemplate) examplesCodeUsage as Multiple(arrangement=Horizontal)
+				Text(format=whiteBackground) exampleCodeField as Editable Memo(height=2Rows)
+				Link(title="Copy", format=middleAirTop) copyExampleCodeUsage as CopyToClipboard
+
+		Block(format=middleAirBottom, visible=false) downloadsBlock
+			Text(value="Downloads", translate=true, format=h5 bold)
+			Block(format=autoHeight) as Relative(width=80%) > Text(value="Access all available resources related to this DSL", translate=true, format=airBottom)
+			TemplateStamp(template=downloadTemplate) downloads as Multiple(arrangement=Horizontal, spacing=DP16, noItemsMessage="There are no downloads available")
+
+		Block(format=middleAirBottom doubleAirTop)
+			Text(value="2. Deploy the execution environment", translate=true, format=h5 bold)
+			Text(value="After building your execution logic, deploy it to the target environment where models will be executed. This can be a local service, a remote server, a Docker container, or a Maven plugin — depending on your setup.", translate=true, format=airBottom)
+
+		Block(format=middleAirBottom doubleAirTop)
+			Text(value="3. How to execute models", translate=true, format=h5 bold)
+			Text(value="Once the runtime environment has been deployed, users will be able to execute their models via a visible action in the model editor. You must define the label for that action and specify its behavior when triggered.", translate=true, format=airBottom)
+
+			Block(format=doubleAirBottom)
+				Text(value="3.1 Name the action users will see", translate=true, format=h7)
+				Block(format=autoHeight) as Relative(width=80%) > Text(value="Choose the label that users will click to execute a model. It could be something like Execute, Run, Deploy, or Build — whatever best describes what your DSL does.", translate=true, format=airBottom)
+				Block as Absolute(width=400px) > Text(format=h5) nameField as Editable(placeholder="execute")
+
+			Block
+				Text(value="3.2 Choose how the action will be triggered", translate=true, format=h7)
+				Block(format=autoHeight) as Relative(width=80%) > Text(value="Define what should be executed when the action is triggered. This connects it to your runtime logic.", translate=true, format=airBottom)
+
+				Selector executionSelector as RadioBox
+					Text(value="No execution method defined (yet)") noneOption as Option
+					Text(value="Invoke via URL") remoteOption as Option
+					Text(value="Manual script execution") localOption as Option
+
+				Block(format=doubleSpaced airTop greyLightBackground) noneEnvironmentBlock as Conditional(executionSelector.noneOption) Relative(width=80%)
+					Text(value="If your runtime environment is not ready, you can keep this option.", translate=true, format=bold)
+					Text(value="The model will be available, but users won’t be able to run it until a method is provided.", translate=true, format=airBottom)
+
+				Block(format=doubleSpaced airTop greyLightBackground) remoteEnvironmentBlock as Conditional(executionSelector.remoteOption) Relative(width=80%)
+					Text(value="If your runtime is accessible through an API or web service, specify the URL that will be called to execute the model.", translate=true, format=bold)
+					Text(value="Use the placeholder [commit] to reference the model version. It will be automatically replaced at runtime. Ensure the endpoint is reachable and accepts requests in the expected format. You can update this configuration at any time if the endpoint or parameters change.", translate=true, format=airBottom)
+					Block(layout=Horizontal, format=airTop)
+						Text(value="Example:", translate=true, format=italic middleAirRight)
+						Link(title="https://your-application.com/run?model=[commit]", format=italic) copyRemoteExample as Action
+					Text(format=whiteBackground) remoteField as Editable(placeholder="https://your-application.com/run?model=[commit]")
+
+				Block(format=doubleSpaced airTop greyLightBackground) localEnvironmentBlock as Conditional(executionSelector.localOption) Relative(width=80%)
+					Text(value="If the model must be executed manually specify the command users should copy and run.", translate=true, format=bold)
+					Text(value="Include the placeholder [commit] or [commit-url] where the model version should be inserted. These values will be resolved automatically at runtime. You can use a predefined template or customize the command to match your environment (e.g., Maven, Docker, shell script). This configuration can be updated at any time.", translate=true, format=airBottom)
+					Block(layout=Horizontal Center, format=airBottom)
+						Text(value="Example templates:", format=airRight)
+						TemplateStamp(template=linkTemplate) exampleTemplates as Multiple(arrangement=Horizontal)
+					Text(format=whiteBackground) localField as Editable Memo(height=15Rows)
+					Block(format=doubleAirTop)
+						Text(value="If your execution environment requires any setup or dependencies, include a URL where users can find the installation steps", translate=true, format=italic)
+						Text(format=whiteBackground) installationField as Editable
+
+Template linkTemplate
+	Link(title="") link as Action
+
+Template downloadTemplate
+	Link(title="") titleLink as Download
+
+Template(format=airTop) dependencyTemplate as Absolute(width=400px)
+	Text title
+	Block(layout=Horizontal)
+		Block(format=doubleAirRight)
+			Text(format=dependencyStyle) contentField as Code(Html)
+			Block(layout=Horizontal, format=middleAirTop)
+				Link(title="Copy", format=airRight) contentLink as CopyToClipboard
+				Link(title="Download") downloadLink as Download
+		Block
+			Text(format=dependencyStyle) repositoryField as Code(Html)
+			Link(title="Copy", format=middleAirTop) repositoryLink as CopyToClipboard
+
+Template languageReleaseHelp
+	Link(title="") titleLink as OpenSite(site=empty, target=Blank)

@@ -1,0 +1,25 @@
+.landing-page {
+    background: no-repeat black url("../landing.jpg");
+    background-size: 100%;
+}
+
+.MuiInput-formControl {
+    border: 2px solid #ddd;
+}
+
+.MuiInput-formControl textarea, .MuiInput-formControl input {
+    margin-left: 5px !important;
+}
+
+.rsw-editor {
+    height: 100%;
+}
+
+.rsw-toolbar {
+    font-size: 13pt;
+}
+
+.rsw-ce {
+    height: calc(100vh - 200px);
+    overflow: auto;
+}

@@ -1,0 +1,17 @@
+{
+  "urls": [
+	{
+	  "url": "./data/quassar-artifactory-api.json",
+	  "name": "quassar-artifactory-api"
+	},
+	{
+	  "url": "./data/quassar-api.json",
+	  "name": "quassar-api"
+	}
+  ],
+  "title": "Quassar Artifactory",
+  "subtitle": "",
+  "background": "",
+  "color": "",
+  "selectorBorderColor": ""
+}

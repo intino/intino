@@ -1,0 +1,178 @@
+package io.quassar.editor.model;
+
+import io.quassar.editor.box.util.SubjectHelper;
+import io.quassar.editor.box.util.VersionNumberComparator;
+import systems.intino.datamarts.subjectstore.model.Subject;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Stream;
+
+public class Model extends SubjectWrapper {
+
+	public static final String DraftRelease = "draft";
+
+	public Model(Subject subject) {
+		super(subject);
+	}
+
+	public static String qualifiedNameFor(String project, String module) {
+		return project + (module != null && !module.isEmpty() ? ": " + module : "");
+	}
+
+	public String id() {
+		return subject.name();
+	}
+
+	public String name() {
+		return getOrEmpty("name");
+	}
+
+	public void name(String value) {
+		set("name", value);
+		set("is-qualified", "false");
+	}
+
+	public void name(String project, String module) {
+		set("name", qualifiedNameFor(project, module));
+		set("project", project);
+		set("module", module);
+		set("is-qualified", "true");
+	}
+
+	public boolean isQualifiedName() {
+		return Boolean.parseBoolean(get("is-qualified"));
+	}
+
+	public String project() {
+		return getOrEmpty("project");
+	}
+
+	public String module() {
+		return getOrEmpty("module");
+	}
+
+	public String description() {
+		return get("description");
+	}
+
+	public void description(String value) {
+		set("description", value);
+	}
+
+	public GavCoordinates language() {
+		return language(subject);
+	}
+
+	public static GavCoordinates language(Subject subject) {
+		return new GavCoordinates(subject.get("dsl-collection"), subject.get("dsl-name"), subject.get("dsl-version"));
+	}
+
+	public void language(GavCoordinates value) {
+		set("dsl-collection", value.groupId());
+		set("dsl-name", value.artifactId());
+		set("dsl-version", value.version());
+	}
+
+	public String owner() {
+		return owner(subject);
+	}
+
+	public static String owner(Subject subject) {
+		return subject.get("owner");
+	}
+
+	public void owner(String owner) {
+		set("owner", owner);
+	}
+
+	public Instant createDate() {
+		String value = get("create-date");
+		return value != null ? Instant.parse(value) : null;
+	}
+
+	public void createDate(Instant date) {
+		set("create-date", date.toString());
+	}
+
+	public Instant updateDate() {
+		String value = get("update-date");
+		return value != null ? Instant.parse(value) : null;
+	}
+
+	public void updateDate(Instant date) {
+		set("update-date", date.toString());
+	}
+
+	public List<String> collaborators() {
+		return getList("collaborator");
+	}
+
+	public void collaborators(List<String> values) {
+		putList("collaborator", values);
+	}
+
+	public void add(String collaborator) {
+		put("collaborator", collaborator);
+	}
+
+	public List<ModelRelease> releases() {
+		Stream<Subject> result = subject.children().collect().stream().filter(s -> s.is(SubjectHelper.ModelReleaseType));
+		return result.map(this::releaseOf).toList();
+	}
+
+	public ModelRelease release(String version) {
+		return releases().stream().filter(r -> r.version().equals(version)).findFirst().orElse(null);
+	}
+
+	public ModelRelease lastRelease() {
+		List<ModelRelease> releases = releases();
+		return !releases.isEmpty() ? releases.stream().sorted((o1, o2) -> VersionNumberComparator.getInstance().compare(o2.version(), o1.version())).toList().getFirst() : null;
+	}
+
+	public boolean isPublic() {
+		return isExample() || !isPrivate();
+	}
+
+	public boolean isPrivate() {
+		return visibility() == Visibility.Private;
+	}
+
+	public void isPrivate(boolean value) {
+		visibility(value ? Visibility.Private : Visibility.Public);
+	}
+
+	public Visibility visibility() {
+		return get("visibility") == null ? Visibility.Private : Visibility.valueOf(get("visibility"));
+	}
+
+	public void visibility(Visibility value) {
+		set("visibility", value.name());
+	}
+
+	public boolean isExample() {
+		return usage() == Usage.Example;
+	}
+
+	public boolean isTemplate() {
+		return usage() == Usage.Template;
+	}
+
+	public enum Usage { Template, Example, EndUser }
+	public Usage usage() {
+		return Usage.valueOf(get("usage"));
+	}
+
+	public void usage(Usage usage) {
+		set("usage", usage.name());
+	}
+
+	public boolean isDraft(String release) {
+		return release != null && release.equals(Model.DraftRelease);
+	}
+
+	private ModelRelease releaseOf(Subject subject) {
+		return new ModelRelease(subject);
+	}
+
+}

@@ -1,0 +1,127 @@
+{
+  "swagger": "2.0",
+  "host": "www.example.org",
+  "basePath": "/commits",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "text/plain; charset\u003dutf-8",
+    "application/json",
+    "multipart/form-data"
+  ],
+  "produces": [
+    "text/plain; charset\u003dutf-8",
+    "application/json",
+    "multipart/form-data"
+  ],
+  "paths": {
+    "/{commit}": {
+      "get": {
+        "description": "Downloads model commit",
+        "operationId": "Api_6_5_1986158278",
+        "consumes": [
+          "text/plain; charset\u003dutf-8",
+          "application/json",
+          "multipart/form-data"
+        ],
+        "produces": [
+          "text/plain; charset\u003dutf-8",
+          "application/json",
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "commit",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/{commit}/hash": {
+      "get": {
+        "description": "Downloads model commit hash",
+        "operationId": "Api_12_5_01207563227",
+        "consumes": [
+          "text/plain; charset\u003dutf-8",
+          "application/json",
+          "multipart/form-data"
+        ],
+        "produces": [
+          "text/plain; charset\u003dutf-8",
+          "application/json",
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "commit",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/{commit}/file/{file}": {
+      "get": {
+        "description": "Downloads model commit file",
+        "operationId": "Api_18_5_11880510906",
+        "consumes": [
+          "text/plain; charset\u003dutf-8",
+          "application/json",
+          "multipart/form-data"
+        ],
+        "produces": [
+          "text/plain; charset\u003dutf-8",
+          "application/json",
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "commit",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "file",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "403": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "definitions": {}
+}

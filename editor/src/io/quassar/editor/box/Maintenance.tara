@@ -1,0 +1,34 @@
+dsl Konos
+
+Service maintenanceApi as JMX
+	Operation("Rebuild language releases") rebuildLanguages > Response as Text
+
+	Operation("Create collection for user") createCollectionForUser
+		Parameter name as Text
+		Parameter owner as Text
+		Response as Bool
+
+	Operation("Create metamodel from template for user") createMetamodelFromTemplate
+		Parameter template as Text
+		Parameter owner as Text
+		Response as Text
+
+	Operation("Create language") createLanguage
+		Parameter collection as Text
+		Parameter metamodel as Text
+		Parameter name as Text
+		Parameter owner as Text
+		Response as Text
+
+	Operation("Create model") createModel
+		Parameter language as Text
+		Parameter name as Text
+		Parameter owner as Text
+		Parameter mainContent as Text
+		Response as Text
+
+	Operation("Add license") addLicense
+		Parameter collection as Text
+		Parameter duration as Integer
+		Parameter username as Text
+		Response as Bool
