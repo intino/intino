@@ -10,8 +10,8 @@ It combines:
 
 This repository contains the reference implementation of Intino used in the experiments reported in:
 
-> **Intino: A contract-driven method for engineering DSML families**  
-Roncal Andrés, O. (2025). Intino. Facing DSML Adoption Challenge through Language Inheritance and Contract-Based Specialization (Version 2.0.0) [Computer software]. https://github.com/intino/intino
+> **Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization**  
+Roncal Andrés, O. (2025). Intino. Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization (Version 2.0.0) [Computer software]. https://github.com/intino/intino
 
 ---
 
@@ -151,7 +151,7 @@ intino/
    └─ materials/          # Task descriptions, questionnaires, etc.
 ```
 
-
+---
 
 ## Getting Started
 
@@ -201,7 +201,7 @@ Usage: tarac <options> <source files>
     --encoding <encoding>           Specify character encoding used by source files. UTF-8 is used by default
 ```
 
-⸻
+---
 
 ## Reproducing the Study
 
@@ -228,7 +228,7 @@ The scripts regenerate:
 
 GPL 3.0
 
-⸻
+---
 
 ## Citation
 
@@ -243,7 +243,7 @@ If you use Intino in academic work, please cite:
 	year = {2025}
 }
 
-⸻
+---
 
 ## Acknowledgements
 
