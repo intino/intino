@@ -109,13 +109,13 @@ public class TypeRule implements Rule<Valued> {
 		if (value instanceof String) return Primitive.STRING;
 		if (value instanceof Primitive.Reference || value instanceof Mogram) return Primitive.REFERENCE;
 		return switch (value) {
-			case Double v -> Primitive.DOUBLE;
-			case Boolean b -> Primitive.BOOLEAN;
-			case Integer i -> Primitive.INTEGER;
-			case Long l -> Primitive.LONG;
-			case File file -> Primitive.RESOURCE;
-			case Primitive.Expression expression -> Primitive.FUNCTION;
-			case Primitive.MethodReference methodReference -> Primitive.FUNCTION;
+			case Double ignored -> Primitive.DOUBLE;
+			case Boolean ignored -> Primitive.BOOLEAN;
+			case Integer ignored -> Primitive.INTEGER;
+			case Long ignored -> Primitive.LONG;
+			case File ignored -> Primitive.RESOURCE;
+			case Primitive.Expression ignored -> Primitive.FUNCTION;
+			case Primitive.MethodReference ignored -> Primitive.FUNCTION;
 			default -> null;
 		};
 	}

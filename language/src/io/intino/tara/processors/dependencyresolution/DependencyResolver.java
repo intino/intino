@@ -89,11 +89,11 @@ public class DependencyResolver {
 		if (container == null) return;
 		for (Rule<?> rule : container.rulesOf(element)) {
 			if (rule instanceof CustomRule) loadCustomRule(element, (CustomRule) rule);
-			if (rule instanceof ConstraintRule cr) {
-				Constraint c = manager.resolve(((ConstraintRule) rule).reference());
+			if (rule instanceof ConstraintRule(NamedReference<Constraint> reference)) {
+				Constraint c = manager.resolve(reference);
 				if (c == null)
-					throw new DependencyException("reject.constraint.reference.not.found", element, ((ConstraintRule) rule).reference().reference());
-				else cr.reference().referent(c);
+					throw new DependencyException("reject.constraint.reference.not.found", element, reference.reference());
+				else reference.referent(c);
 			}
 		}
 	}
@@ -120,7 +120,7 @@ public class DependencyResolver {
 		if (language == null || language.metaLanguage().isEmpty()) return null;
 		MogramRoot lModel = language.model();
 		if (lModel == null) return null;
-		return new ReferenceManager(lModel).resolvePropReference(value, lModel.components().get(0));
+		return new ReferenceManager(lModel).resolvePropReference(value, lModel.components().getFirst());
 	}
 
 	private Mogram resolveReferenceParameter(Mogram mogram, Primitive.Reference value) {
@@ -128,7 +128,7 @@ public class DependencyResolver {
 	}
 
 	private boolean areReferenceValues(PropertyDescription parameter) {
-		return parameter.values().get(0) instanceof Primitive.Reference;
+		return parameter.values().getFirst() instanceof Primitive.Reference;
 	}
 
 	private void resolveParent(Mogram mogram) throws DependencyException {
@@ -242,7 +242,7 @@ public class DependencyResolver {
 	}
 
 	private void resolvePropDefaultValue(ReferenceProperty prop, Mogram container) throws DependencyException {
-		if (prop.values().isEmpty() || !(prop.values().get(0) instanceof Primitive.Reference)) return;
+		if (prop.values().isEmpty() || !(prop.values().getFirst() instanceof Primitive.Reference)) return;
 		final List<Primitive.Reference> references = prop.values().stream().map(v -> ((Primitive.Reference) v)).toList();
 		for (Primitive.Reference r : references) {
 			if (r.isEmpty() || r.get().reference() == null) continue;

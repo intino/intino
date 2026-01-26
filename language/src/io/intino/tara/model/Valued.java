@@ -10,7 +10,7 @@ import static io.intino.tara.model.Primitive.RESOURCE;
 public interface Valued extends Element, Sized {
 
 	default List<Object> makeUp(File resourcesRoot, Primitive type, List<Object> values) {
-		if (!values.isEmpty() && values.get(0) instanceof Primitive.Expression) return values;
+		if (!values.isEmpty() && values.getFirst() instanceof Primitive.Expression) return values;
 		if (type != null && type.equals(RESOURCE) && isAcceptedValue(values))
 			return values.stream().
 					map(o -> o instanceof EmptyMogram ? null : new File(resourcesRoot, o.toString())).
@@ -21,7 +21,7 @@ public interface Valued extends Element, Sized {
 	}
 
 	default boolean isAcceptedValue(List<Object> values) {
-		return values.isEmpty() || values.get(0) instanceof String;
+		return values.isEmpty() || values.getFirst() instanceof String;
 	}
 
 	String name();
