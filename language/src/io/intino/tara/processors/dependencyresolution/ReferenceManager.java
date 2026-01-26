@@ -1,7 +1,6 @@
 package io.intino.tara.processors.dependencyresolution;
 
 import io.intino.tara.model.*;
-import io.intino.tara.model.constraints.Constraint;
 import io.intino.tara.processors.model.HasMogram;
 import io.intino.tara.processors.model.MogramImpl;
 import io.intino.tara.processors.model.ReferenceProperty;
@@ -92,7 +91,7 @@ public class ReferenceManager {
 			final List<Mogram> containedMograms = reference.mograms().stream().filter(m -> m.name().equals(name)).toList();
 			if (containedMograms.isEmpty() && reference.parent() != null)
 				reference = reference.parent().get().mograms().stream().filter(m -> m.name().equals(name)).findFirst().orElse(null);
-			else reference = containedMograms.isEmpty() ? null : containedMograms.get(0);
+			else reference = containedMograms.isEmpty() ? null : containedMograms.getFirst();
 			if (reference == null) return null;
 		}
 		return reference;

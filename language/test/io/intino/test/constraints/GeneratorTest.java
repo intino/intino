@@ -2,7 +2,7 @@ package io.intino.test.constraints;
 
 import io.intino.tara.Source;
 import io.intino.tara.language.grammar.SyntaxException;
-import io.intino.tara.model.constraints.Constraint;
+import io.intino.tara.model.Constraint;
 import io.intino.tara.processors.model.Model;
 import io.intino.tara.processors.parser.Parser;
 import org.junit.Test;

@@ -1,6 +1,7 @@
 package io.intino.tara.model.rules.property;
 
 import io.intino.tara.model.*;
+import io.intino.tara.model.rules.Size;
 
 import java.io.File;
 import java.util.List;
@@ -8,10 +9,11 @@ import java.util.List;
 public class TypeRule implements Rule<Valued> {
 	private static final long serialVersionUID = 1L;
 	private String errorParameter;
+
 	@Override
 	public boolean accept(Valued valued) {
-		Primitive inferredType = inferType(valued.values().get(0));
-		boolean result = inferredType != null && checkCompatiblePrimitives(valued.type(), inferredType, valued.isMultiple());
+		Primitive inferredType = inferType(valued.values().getFirst());
+		boolean result = inferredType != null && checkCompatiblePrimitives(valued.type(), inferredType, !valued.rule(Size.class).isSingle());
 		errorParameter = valued.type().javaName();
 		return result;
 	}
@@ -106,14 +108,16 @@ public class TypeRule implements Rule<Valued> {
 			return Primitive.EMPTY;
 		if (value instanceof String) return Primitive.STRING;
 		if (value instanceof Primitive.Reference || value instanceof Mogram) return Primitive.REFERENCE;
-		if (value instanceof Double) return Primitive.DOUBLE;
-		if (value instanceof Boolean) return Primitive.BOOLEAN;
-		if (value instanceof Integer) return Primitive.INTEGER;
-		if (value instanceof Long) return Primitive.LONG;
-		if (value instanceof File) return Primitive.RESOURCE;
-		if (value instanceof Primitive.Expression) return Primitive.FUNCTION;
-		if (value instanceof Primitive.MethodReference) return Primitive.FUNCTION;
-		return null;
+		return switch (value) {
+			case Double v -> Primitive.DOUBLE;
+			case Boolean b -> Primitive.BOOLEAN;
+			case Integer i -> Primitive.INTEGER;
+			case Long l -> Primitive.LONG;
+			case File file -> Primitive.RESOURCE;
+			case Primitive.Expression expression -> Primitive.FUNCTION;
+			case Primitive.MethodReference methodReference -> Primitive.FUNCTION;
+			default -> null;
+		};
 	}
 
 

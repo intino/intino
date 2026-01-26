@@ -1,7 +1,5 @@
 package io.intino.tara.model;
 
-import java.util.List;
-
 public interface Facet extends Parametrized, Element {
 
 	String type();
@@ -11,8 +9,6 @@ public interface Facet extends Parametrized, Element {
 	void fullType(String s);
 
 	String fullType();
-
-	List<PropertyDescription> parameters();
 
 	NamedReference<Mogram> target();
 }

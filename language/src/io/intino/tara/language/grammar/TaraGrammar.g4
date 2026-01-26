@@ -3,7 +3,7 @@ options { tokenVocab=TaraLexer; }
 
 root: NEWLINE* dslDeclaration? imports? (mogramOrConstraint (NEWLINE+ mogramOrConstraint)*)? (NEWLINE* EOF);
 
-dslDeclaration : DSL headerReference NEWLINE*;
+dslDeclaration : DSL headerReference NEWLINE+;
 
 mogramOrConstraint: constraintDef | mogram;
 imports : anImport+;

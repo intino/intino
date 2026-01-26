@@ -19,21 +19,12 @@ public interface PropertyDescription extends Valued {
 
 	void definition(Property property);
 
-	boolean isMultiple();
-
-	void multiple(boolean multiple);
 
 	int position();
-
-	List<Rule<?>> rules();
-
-	void add(Rule<?> rule);
 
 	void scope(String scope);
 
 	String scope();
-
-	String metric();
 
 	void metric(String metric);
 

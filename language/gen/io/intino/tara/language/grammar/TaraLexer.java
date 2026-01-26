@@ -1,17 +1,15 @@
 // Generated from /Users/oroncal/workspace/infrastructure/tara/language/src/io/intino/tara/language/lexicon/TaraLexer.g4 by ANTLR 4.13.2
 package io.intino.tara.language.grammar;
 
-import static io.intino.tara.language.grammar.TaraGrammar.CHARACTER;
 import io.intino.tara.processors.parser.antlr.BlockManager;
-
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.LexerATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
+
+import static io.intino.tara.language.grammar.TaraGrammar.CHARACTER;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class TaraLexer extends Lexer {

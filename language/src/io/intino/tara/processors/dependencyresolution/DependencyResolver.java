@@ -2,7 +2,6 @@ package io.intino.tara.processors.dependencyresolution;
 
 import io.intino.tara.Language;
 import io.intino.tara.model.*;
-import io.intino.tara.model.constraints.Constraint;
 import io.intino.tara.model.rules.CustomRule;
 import io.intino.tara.model.rules.composition.ConstraintRule;
 import io.intino.tara.model.rules.property.PropertyCustomRule;

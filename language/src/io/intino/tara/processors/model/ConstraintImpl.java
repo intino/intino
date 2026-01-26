@@ -1,13 +1,13 @@
-package io.intino.tara.model.constraints;
+package io.intino.tara.processors.model;
 
-import io.intino.tara.model.Element;
+import io.intino.tara.model.Constraint;
 import io.intino.tara.model.Mogram;
 import io.intino.tara.model.constraints.context.MogramContext;
 import io.intino.tara.model.constraints.expressions.Expression;
 
 import java.net.URI;
 
-public class Constraint implements Element {
+public class ConstraintImpl implements Constraint {
 	private static final long serialVersionUID = 7700837726655946516L;
 	private final URI source;
 	private final String name;
@@ -15,7 +15,7 @@ public class Constraint implements Element {
 	private final TextRange range;
 	private Expression expression;
 
-	public Constraint(URI source, String name, String message, TextRange range) {
+	public ConstraintImpl(URI source, String name, String message, TextRange range) {
 		this.source = source;
 		this.name = name;
 		this.message = message;

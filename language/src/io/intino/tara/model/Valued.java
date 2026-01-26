@@ -51,7 +51,5 @@ public interface Valued extends Element, Sized {
 		return values();
 	}
 
-	boolean isMultiple();
-
 	void values(List<Object> objects);
 }

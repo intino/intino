@@ -80,7 +80,7 @@ public class ParserTest {
 		NativeObjectRule rule = (NativeObjectRule) implementation.rules().stream().filter(r -> r instanceof NativeObjectRule).findFirst().get();
 		assertEquals(rule.declaredType(), "BrokerImplementation");
 
-		Mogram destination = components.get(0).components().get(0);
+		Mogram destination = components.getFirst().components().getFirst();
 		assertEquals("CompositeDestination", destination.name());
 		Property type = property(destination.properties(), "type");
 		assertEquals("type", type.name());
@@ -91,7 +91,7 @@ public class ParserTest {
 		Property forwardTo = property(destination.properties(), "forwardTo");
 		assertEquals("forwardTo", forwardTo.name());
 		assertEquals(STRING, forwardTo.type());
-		assertTrue(forwardTo.isMultiple());
+		assertTrue(!forwardTo.rule(Size.class).isSingle());
 	}
 
 	@Test
@@ -107,16 +107,16 @@ public class ParserTest {
 
 		assertTrue(model.rulesOf(datamart).get(1) instanceof Named);
 
-		Property scale = datamart.properties().get(0);
+		Property scale = datamart.properties().getFirst();
 		assertEquals(WORD, scale.type());
-		assertFalse(scale.isMultiple());
+		assertTrue(scale.rule(Size.class).isSingle());
 		assertEquals(1, scale.values().size());
-		assertTrue(scale.values().get(0) instanceof Primitive.Reference);
-		assertEquals("None", ((Primitive.Reference) scale.values().get(0)).get().reference());
+		assertTrue(scale.values().getFirst() instanceof Primitive.Reference);
+		assertEquals("None", ((Primitive.Reference) scale.values().getFirst()).get().reference());
 
 		Property maxCount = datamart.properties().get(1);
 		assertEquals(1, maxCount.values().size());
-		assertEquals(-1, maxCount.values().get(0));
+		assertEquals(-1, maxCount.values().getFirst());
 		assertEquals(2, maxCount.rules().size());
 		Property last = datamart.properties().get(2);
 		assertTrue(last.isReference());

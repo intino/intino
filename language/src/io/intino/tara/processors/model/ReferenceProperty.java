@@ -12,7 +12,6 @@ import static io.intino.tara.model.Primitive.REFERENCE;
 public class ReferenceProperty extends PropertyImpl implements MogramReference, Serializable {
 	private static final long serialVersionUID = 1L;
 	private final NamedReference<Mogram> target;
-	private String doc;
 
 	public ReferenceProperty(Mogram container, String type, String name, int line, TextRange range) {
 		super(container, REFERENCE, name, line, range);

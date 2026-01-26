@@ -1,8 +1,8 @@
 package io.intino.tara.model.rules.composition;
 
+import io.intino.tara.model.Constraint;
 import io.intino.tara.model.Mogram;
 import io.intino.tara.model.NamedReference;
-import io.intino.tara.model.constraints.Constraint;
 import io.intino.tara.model.rules.MogramRule;
 
 public record ConstraintRule(NamedReference<Constraint> reference) implements MogramRule {

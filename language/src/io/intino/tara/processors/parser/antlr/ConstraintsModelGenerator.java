@@ -4,10 +4,11 @@ import io.intino.tara.Source;
 import io.intino.tara.language.grammar.SyntaxException;
 import io.intino.tara.language.grammar.TaraGrammar;
 import io.intino.tara.language.grammar.TaraGrammar.*;
+import io.intino.tara.model.Constraint;
 import io.intino.tara.model.Element.TextRange;
-import io.intino.tara.model.constraints.Constraint;
 import io.intino.tara.model.constraints.expressions.*;
 import io.intino.tara.model.constraints.expressions.FunctionCallExpression.InvalidFunctionException;
+import io.intino.tara.processors.model.ConstraintImpl;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -26,7 +27,7 @@ public class ConstraintsModelGenerator {
 	private final Source source;
 	private final TaraGrammar.RootContext root;
 	private final List<SyntaxException> errors = new ArrayList<>();
-	private Constraint current = null;
+	private ConstraintImpl current = null;
 
 	public ConstraintsModelGenerator(Source source, TaraGrammar.RootContext root) {
 		this.source = source;
@@ -39,14 +40,14 @@ public class ConstraintsModelGenerator {
 
 	public List<Constraint> walk() {
 		return root.mogramOrConstraint().stream()
-				.map(c -> c.constraintDef())
+				.map(MogramOrConstraintContext::constraintDef)
 				.filter(Objects::nonNull)
 				.map(this::constraintOf).toList();
 	}
 
 	private Constraint constraintOf(ConstraintDefContext ctx) {
 		String message = ctx.description() == null || ctx.description().STRING() == null ? "" : withoutQuotes(ctx.description().STRING().getText());
-		this.current = new Constraint(source.uri(), ctx.IDENTIFIER().getText(), message, textRange(ctx));
+		this.current = new ConstraintImpl(source.uri(), ctx.IDENTIFIER().getText(), message, textRange(ctx));
 		expression(ctx);
 		return current;
 	}

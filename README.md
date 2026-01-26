@@ -1,6 +1,6 @@
-# Intino
+# Quassar
 
-Intino is a model-driven engineering (MDE) method and toolchain for building **families of Domain-Specific Modeling Languages (DSMLs)** from a common *mother language*.  
+Quassar is a model-driven engineering (MDE) method and toolchain for building **families of Domain-Specific Modeling Languages (DSMLs)** from a common *mother language*.  
 It combines:
 
 - A **mother language** (Tara) with executable semantics and contracts.
@@ -8,10 +8,10 @@ It combines:
 - A **contract-based specialization pipeline** to derive concrete DSMLs.
 - A single, **parameterized Language Server** and **web/desktop front-ends**.
 
-This repository contains the reference implementation of Intino used in the experiments reported in:
+This repository contains the reference implementation of Quassar used in the experiments reported in:
 
 > **Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization**  
-Roncal Andrés, O. (2025). Intino. Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization (Version 2.0.0) [Computer software]. https://github.com/intino/intino
+Roncal Andrés, O. (2025). Quassar. Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization (Version 2.0.0) [Computer software]. https://github.com/quassar-lab/quassar
 
 ---
 
@@ -23,16 +23,8 @@ Roncal Andrés, O. (2025). Intino. Facing the DSML Adoption Challenge with a Hol
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the toolchain](#running-the-toolchain)
-- [Working with DSML Families](#working-with-dsml-families)
-  - [Defining a DSML with Metta](#defining-a-dsml-with-metta)
-  - [Generating DSML Artifacts](#generating-dsml-artifacts)
-  - [Using the Language Server](#using-the-language-server)
-- [Smart Contracts Example](#smart-contracts-example)
+  - [How to create your own DSML](#how-to-create-your-own-dsml)
 - [Reproducing the Study](#reproducing-the-study)
-- [Configuration & Environment](#configuration--environment)
-- [Contributing](#contributing)
 - [License](#license)
 - [Citation](#citation)
 - [Acknowledgements](#acknowledgements)
@@ -47,7 +39,7 @@ Traditional DSML tooling often requires:
 - Poor integration with modern development workflows.
 - Weak support for validation and evolution across language families.
 
-Intino addresses these issues by:
+Quassar addresses these issues by:
 
 1. **Rooting all DSMLs in a common mother language (Tara)** that defines:
    - Uniform abstract syntax (nodes, properties, references, constraints).
@@ -65,7 +57,7 @@ Intino addresses these issues by:
 This repository contains:
 
 - Code of core implementation of Tara and Metta.
-- Code of the Intino builder and builder service.
+- Code of the Quassar builder and builder service.
 - Code of the Parameterized Language Server.
 - Replication package of the experiment done with users.
 
@@ -99,7 +91,7 @@ This repository contains:
 
 ## Architecture
 
-At a high level, Intino is structured as:
+At a high level, Quassar is structured as:
 
 - **Tara Core & Checker**
   - Mother language interpreter.
@@ -131,49 +123,45 @@ At a high level, Intino is structured as:
 
 ## Project Structure
 
-> **Note:** The exact layout may differ; adapt this section to your actual repo structure.
-
 ```text
-intino/
-├─ language/			  # Mother language core and checker
-│
-├─ metta/                 # Metta DSML implementation│
-│
-├─ builder/				  # Builder that generates the DSML
-│
-├─ extended-builder/	  # Extension of the builder that also generates an accessor library to the graph and the language-server
-│
-├─ language-server/	 	  # Parameterized LSP implementation
-│
-├─ editor/				  # Web-based UI built on top of the Language Server.
-│
-├─ replication-package/
-   ├─ data/               # Anonymized CSVs for the user study
-   ├─ scripts/            # Analysis scripts (R/Python/…)
-   └─ sources/            # Task descriptions, questionnaires, etc.
+quassar/
+├─ language/              # Mother language core and checker (Tara)
+├─ metta/                 # Metta DSML implementation
+├─ builder/               # Builder that generates DSML artifacts
+├─ extended-builder/      # Builder extensions (e.g., accessors, LSP packaging)
+├─ builder-sdk/           # SDK for builders/tooling integration
+├─ builder-service/       # Builder exposed as a service
+├─ language-server/       # Parameterized LSP implementation
+├─ editor/                # Web-based UI built on top of the Language Server
+├─ editor-elements/       # Editor UI components/elements
+├─ experiment/            # Replication package (datasets, scripts, sources)
+├─ docker/                # Docker images and helper scripts
+└─ out/                   # Build outputs (generated/packaged artifacts)
 ```
 
 ---
 
 ## Getting Started
 
-Prerequisites
-	•	JDK: JDK 21
-	•	Build tool: Maven 3.9
-	•	Node.js / npm 19
-	•	Git (to clone this repository).
+### Prerequisites
+
+- JDK 21
+- Maven 3.9
+- Node.js / npm 19
+- Git
 
 Optional (for experiments):
-	•	Python for statistical analysis.
-	•	Additional dependencies listed in experiment/README.md
+- Python for statistical analysis
+- Additional dependencies listed in `experiment/README.md`
 
-# How to create your own DSML.
-For create your own language, follow the next steps:
+### How to create your own DSML
+
+To create your own language, follow these steps:
 
 1. Install Java 21 or higher.
-2. Download the last builder package from releases.
-3. Select the language. For new creation, you can use Metta to create meta-meta-models (M3) or Proteo for meta-models (M2). You can use a language created previously.
-In any case you should specify the language at beginning of each document to compile.
+2. Download the latest builder package from the releases.
+3. Select the language. For new creations, you can use Metta to create meta-meta-models (M3) or Proteo for meta-models (M2). You can also use a language created previously.
+   In any case, you should specify the language at the beginning of each document to compile.
 4. Run the compiler with the following command:
 
 
@@ -192,14 +180,14 @@ You can also obtain info about the options of compiler running:
     java -jar tara-builder-XXX.jar --help
 ```
 
-it's output will be
+Its output will be:
 ```
 Usage: tarac <options> <source files>
  where possible options include:
     --level <level>         	    REQUIRED. Specify the abstraction level in MDE: model (1), meta-model (2), meta-meta-model (3)
     --dsl <name:version>	    REQUIRED. Specify the name and version of the language used for define models
     --out-dsl <name:version>        REQUIRED. Specify the name and version of the language created. Not necessary if level is model
-    --dsl-repository <directory>    Specify the directory where the where the language will be found and out language will be created. Used '~/.m2/repository' as default
+    --dsl-repository <directory>    Specify the directory where the language will be found and the output language will be created. Uses '~/.m2/repository' as default
     --encoding <encoding>           Specify character encoding used by source files. UTF-8 is used by default
 ```
 
@@ -209,21 +197,25 @@ Usage: tarac <options> <source files>
 
 If you are using this repository as the replication package of the paper, the folder:
 
-experiment/
+`experiment/`
 
 contains:
-	•	datasets/ – anonymized CSVs and xlsx with: TTFVM, F1, SUS, task completion...
-	•	materials/ – study materials: Task descriptions, instructions, SUS items, domain-specific questionnaire, etc.
+- `datasets/` – anonymized datasets (CSV/XLSX) with TTFVM, F1, SUS, task completion, etc.
+- `sources/` – study sources (models, materials, PDFs)
+- `scripts/` – analysis scripts and generated outputs
+- `questionnaires.pdf` – questionnaires used in the study
 
 To reproduce the main statistical analyses:
 
+```
 cd experiment/scripts
-	python analysis.py>
+python analysis.py
+```
 
 The scripts regenerate:
-	•	Summary tables reported in the paper.
-	•	Statistical tests and effect sizes for the validation propositions.
-	•	Plots included in the replication package.
+- Summary tables reported in the paper
+- Statistical tests and effect sizes for the validation propositions
+- Plots included in the replication package
 
 
 ## License
@@ -234,13 +226,13 @@ GPL 3.0
 
 ## Citation
 
-If you use Intino in academic work, please cite:
+If you use Quassar in academic work, please cite:
 
-@software{Roncal_Andres_Intino_Facing_DSML_2025,
+@software{Roncal_Andres_Quassar_Facing_DSML_2025,
 	author = {Roncal Andrés, Octavio},
 	month = dec,
-	title = {{Intino. Facing DSML Adoption Challenge through Language Inheritance and Contract-Based Specialization}},
-	url = {https://github.com/intino/intino},
+	title = {{Quassar. Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization}},
+	url = {https://github.com/quassar-lab/quassar},
 	version = {2.0.0},
 	year = {2025}
 }
@@ -249,7 +241,7 @@ If you use Intino in academic work, please cite:
 
 ## Acknowledgements
 
-We thank all participants of the user study and collaborators who provided feedback on the Intino method and toolchain.
+We thank all participants of the user study and collaborators who provided feedback on the Quassar method and toolchain.
 
 
 > **Note on repository history**
@@ -258,7 +250,7 @@ We thank all participants of the user study and collaborators who provided feedb
 > independent repositories. This reorganization was carried out to:
 > (i) provide a single, coherent codebase that matches the architecture
 > described in the accompanying paper,
-> (ii) simplify maintenance and evolution of the Intino toolchain, and
+> (ii) simplify maintenance and evolution of the Quassar toolchain, and
 > (iii) offer a self-contained replication package for researchers and
 > practitioners.
 > 

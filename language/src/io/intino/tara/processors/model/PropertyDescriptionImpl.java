@@ -19,7 +19,6 @@ public class PropertyDescriptionImpl implements PropertyDescription, Serializabl
 	private final TextRange range;
 	private String metric;
 	private Primitive inferredType;
-	private boolean multiple;
 	private final List<Rule<?>> rules = new ArrayList<>();
 	private Mogram container;
 	private String uid;
@@ -74,16 +73,6 @@ public class PropertyDescriptionImpl implements PropertyDescription, Serializabl
 	@Override
 	public void definition(Property property) {
 		this.definition = property;
-	}
-
-	@Override
-	public boolean isMultiple() {
-		return multiple;
-	}
-
-	@Override
-	public void multiple(boolean multiple) {
-		this.multiple = multiple;
 	}
 
 	@Override

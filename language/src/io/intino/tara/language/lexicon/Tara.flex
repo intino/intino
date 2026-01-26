@@ -2,7 +2,7 @@ package io.intino.tara.plugin.lang.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import io.intino.tara.plugin.lang.psi.TaraTypes;
+import io.intino.plugin.lang.psi.TaraTypes;
 import com.intellij.psi.TokenType;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -83,7 +83,6 @@ INLINE              = ">"
 SUB                 = "sub"
 HAS                 = "has"
 DEF                 = "def"
-
 USE                 = "use"
 FACET               = "facet"
 DSL                 = "dsl"
@@ -91,8 +90,9 @@ WITH                = "with"
 AS                  = "as"
 ON                  = "on"
 IS                  = "is"
-INTO                = "into"
 EXTENDS             = "extends"
+CONSTRAINT_KEY   	= "constraint"
+
 //mograms
 GENERALIZATION      = "generalization"
 COMPONENT           = "component"
@@ -105,6 +105,7 @@ DECORABLE           = "decorable"
 FINAL               = "final"
 
 LEFT_PARENTHESIS    = "("
+CONSTRAINT_START    = "::"
 RIGHT_PARENTHESIS   = ")"
 LEFT_SQUARE         = "["
 RIGHT_SQUARE        = "]"
@@ -164,9 +165,9 @@ DIGIT               = [:digit:]
 STRING_MULTILINE    	= {EQUALS} {EQUALS}+
 NATIVE_MULTILINE_VALUE  = {DASHES}
 
-IDENTIFIER_KEY      = [:jletter:] ([:jletterdigit:] | {DASH})*
+IDENTIFIER_KEY      = ([:jletter:]| {UNDERDASH}) ([:jletterdigit:] | {DASH}| {DASH} [:jletter:] | {UNDERDASH})*
 
-%xstate QUOTED, MULTILINE, EXPRESSION, EXPRESSION_MULTILINE
+%xstate QUOTED, CONSTRAINT_MODE MULTILINE, EXPRESSION, EXPRESSION_MULTILINE
 
 %%
 <YYINITIAL> {
@@ -178,11 +179,12 @@ IDENTIFIER_KEY      = [:jletter:] ([:jletterdigit:] | {DASH})*
 	{EXTENDS}                       {   return TaraTypes.EXTENDS; }
 	{FACET}                         {   return TaraTypes.FACET; }
 	{HAS}                           {   return TaraTypes.HAS; }
-	{DEF}                           {   return TaraTypes.VAR; }
+	{DEF}                           {   return TaraTypes.DEF; }
 	{AS}                            {   return TaraTypes.AS; }
-	{ON}                            {   return TaraTypes.ON; }
+	//{ON}                            {   return TaraTypes.ON; }
 	{IS}                            {   return TaraTypes.IS; }
-	{INTO}                          {   return TaraTypes.INTO; }
+	{CONSTRAINT_KEY}                {   return TaraTypes.CONSTRAINT_KEY; }
+	{CONSTRAINT_START}              {   yybegin(CONSTRAINT_MODE);return TaraTypes.CONSTRAINT_START; }
 	{WITH}                          {   return TaraTypes.WITH; }
 
 	{COLON}                         {   return TaraTypes.COLON; }
@@ -198,6 +200,7 @@ IDENTIFIER_KEY      = [:jletter:] ([:jletterdigit:] | {DASH})*
 	{GENERALIZATION}                {   return TaraTypes.GENERALIZATION; }
 	{COMPONENT}                     {   return TaraTypes.COMPONENT; }
     {FEATURE}                       {   return TaraTypes.FEATURE; }
+    {PRIVATE}                      {   return TaraTypes.PRIVATE; }
     {REACTIVE}                      {   return TaraTypes.REACTIVE; }
 	{FINAL}                         {   return TaraTypes.FINAL; }
 	{REQUIRED}                      {   return TaraTypes.REQUIRED; }
@@ -262,6 +265,54 @@ IDENTIFIER_KEY      = [:jletter:] ([:jletterdigit:] | {DASH})*
     \\                              {   return TaraTypes.CHARACTER; }
     [^]                             {   return TokenType.BAD_CHARACTER;}
     .                               {   return TokenType.BAD_CHARACTER;}
+}
+<CONSTRAINT_MODE> {
+
+  /* -------------------- WHITESPACE -------------------- */
+  {SP}+                              { return com.intellij.psi.TokenType.WHITE_SPACE; }
+
+  {NEWLINE}+ {SP}*                   { yybegin(YYINITIAL); return com.intellij.psi.TokenType.WHITE_SPACE; }
+
+  /* -------------------- MULTI-WORD KEYWORD -------------------- */
+  "starts" {SP}+ "with"              { return TaraTypes.STARTS_WITH; }
+
+  /* -------------------- OPERATORS (largos primero) -------------------- */
+  "=="                                { return TaraTypes.COMPARER_EQUALS; }
+  "!="                                { return TaraTypes.NOT_EQUALS; }
+  ">="                                { return TaraTypes.GREATER_EQUALS; }
+  "<="                                { return TaraTypes.LESS_EQUALS; }
+  "->"                                { return TaraTypes.LAMBDA; }
+
+  ">"                                 { return TaraTypes.GREATER; }
+  "<"                                 { return TaraTypes.LESS; }
+
+  {LEFT_PARENTHESIS}                                 { return TaraTypes.LEFT_PARENTHESIS; }
+  {RIGHT_PARENTHESIS}                                 { return TaraTypes.RIGHT_PARENTHESIS; }
+  {COMMA}                                 { return TaraTypes.COMMA; }
+  {DOT}                                 { return TaraTypes.DOT; }
+
+  /* -------------------- KEYWORDS (con límite de palabra) -------------------- */
+  \b"in"\b                            { return TaraTypes.IN; }
+  {IS}		                          { return TaraTypes.IS; }
+  \b"like"\b                          { return TaraTypes.LIKE; }
+  \b"matches"\b                       { return TaraTypes.MATCHES; }
+  {EMPTY_REF}                         { return TaraTypes.EMPTY; }
+
+  \b"and"\b                           { return TaraTypes.AND; }
+  \b"or"\b                            { return TaraTypes.OR; }
+  \b"not"\b                           { return TaraTypes.NOT; }
+
+  /* STRING_VALUE: " ... " con escapes \" y \\ (equivalente a tu ANTLR) */
+  \"([^\"\\]|\\[\"\\])*\"             { return TaraTypes.STRING; }
+
+  {BOOLEAN_VALUE_KEY}                 { return TaraTypes.BOOLEAN_VALUE; }
+
+  ({PLUS}|{DASH})? {DIGIT}+ "." {DIGIT}+   { return TaraTypes.DOUBLE_VALUE_KEY; }
+  {DASH} {DIGIT}+                        { return TaraTypes.NEGATIVE_VALUE_KEY; }
+  {PLUS}? {DIGIT}+                       { return TaraTypes.NATURAL_VALUE_KEY; }
+
+  {IDENTIFIER_KEY} 					  { return TaraTypes.IDENTIFIER_KEY; }
+  .                                   { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
 <MULTILINE> {

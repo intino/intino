@@ -1,4 +1,4 @@
-// Generated from /Users/oroncal/workspace/infrastructure/tara/language/src/io/intino/tara/language/grammar/TaraGrammar.g4 by ANTLR 4.13.2
+// Generated from /Users/oroncal/workspace/research/quassar/language/src/io/intino/tara/language/grammar/TaraGrammar.g4 by ANTLR 4.13.2
 package io.intino.tara.language.grammar;
 
 import org.antlr.v4.runtime.ParserRuleContext;

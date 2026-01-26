@@ -1,10 +1,6 @@
 package io.intino.tara.processors.model;
 
-import io.intino.tara.model.Element;
-import io.intino.tara.model.Mogram;
-import io.intino.tara.model.MogramRoot;
-import io.intino.tara.model.Rule;
-import io.intino.tara.model.constraints.Constraint;
+import io.intino.tara.model.*;
 
 import java.io.File;
 import java.io.Serializable;

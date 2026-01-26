@@ -1,7 +1,5 @@
 package io.intino.tara.model;
 
-import io.intino.tara.model.constraints.Constraint;
-
 import java.io.File;
 import java.util.List;
 
