@@ -10,8 +10,8 @@ It combines:
 
 This repository contains the reference implementation of Quassar used in the experiments reported in:
 
-> **Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization**  
-Roncal Andrés, O. (2025). Quassar. Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization (Version 2.0.0) [Computer software]. https://github.com/quassar-lab/quassar
+> **Quassar: An End-to-End DSML Engineering Platform via Language Inheritance and Contract-Based Specialization**  
+Roncal Andrés, O. (2025). Quassar: An End-to-End DSML Engineering Platform via Language Inheritance and Contract-Based Specialization (Version 1.0.0) [Computer software]. https://github.com/quassar-lab/quassar
 
 ---
 
@@ -228,13 +228,13 @@ GPL 3.0
 
 If you use Quassar in academic work, please cite:
 
-@software{Roncal_Andres_Quassar_Facing_DSML_2025,
-	author = {Roncal Andrés, Octavio},
-	month = dec,
-	title = {{Quassar. Facing the DSML Adoption Challenge with a Holistic Approach Based on Language Inheritance and Contract-Based Specialization}},
-	url = {https://github.com/quassar-lab/quassar},
-	version = {2.0.0},
-	year = {2025}
+@software{Roncal_Andres_Quassar_An_End-to-End_2026,
+    author = {Roncal Andrés, Octavio},
+    month = feb,
+    title = {{Quassar: An End-to-End DSML Engineering Platform via Language Inheritance and Contract-Based Specialization}},
+    url = {https://github.com/quassar-lab/quassar/},
+    version = {1.0.0},
+    year = {2026}
 }
 
 ---
